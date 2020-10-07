@@ -1,4 +1,6 @@
-topic # ordered collection of events stored in a durable way
+# Notes about Kafka queue system
+
+topic - ordered collection of events stored in a durable way
 	stored on a disk and replicated
 	can store data for short or long amount of time
 	can be small or huge
