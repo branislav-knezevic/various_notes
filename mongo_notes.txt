@@ -1,0 +1,55 @@
+db.getCollection('NewsletterSubscriptions').find({},{emailAddress:1}) # search, but return only specific objects
+	#{"emailAddress.address":1} if nested
+
+
+query of date - if smaller export to json and then convert online
+if bigger export from studio 3t
+
+----------------------------
+export nested values to csv:
+
+db.getCollection('<CollectionName>').find
+(
+    {<condition>},{
+        <_id-field>:0,
+        <field1>:1,
+        "field.subfield1":1    
+    }
+)
+.forEach(function (x) {
+    print(x.<field1> + ",");
+    print(x.field.subfield1);
+    
+    print('#line_end#');
+});
+
+example
+db.getCollection('PaymentOrders').find
+(
+    {},{
+        _id:0,
+        gtvOrderId:1,
+        "currentStatus.state":1    
+    }
+)
+.forEach(function (x) {
+    print(x.gtvOrderId + ",");
+    print(x.currentStatus.state);
+    
+    print('#line_end#');
+});
+
+Then in notepad++
+  1. remove lines with #line_end#
+  2. remove empty lines
+      find what: \r\n\r\n  (select extended)
+	  replace with: <nothing>
+  3. run regex to put al lines in the same row
+      find what: (.+)\r\n(.+)    # add \r\n(.+) for each row
+	  replace with: \1\t\2\t     # add \<number>\t for each row
+  4. remove tabs
+      find what: [ \t]
+	  replace with: <nothing>
+  5. save file as csv
+  
+---------------------------------------

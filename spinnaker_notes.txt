@@ -1,0 +1,11 @@
+deck - browser ui
+gate - api gw
+orca - orchestration enging
+clouddriver - responsible for all mutatins calls to the cloud providers 
+front50 - used to persist metadata of apps,projects,pipelines and notifications
+rosco - bakery ( procudes vm images)
+igor - triggering event system (used for CI)
+echo - Spinnaker's eventing bus
+fiat - Spinnaker's authorization service
+kayenta - automated canary analysis for Spinnaker 
+halyard - configuration service

@@ -1,0 +1,235 @@
+:toc: macro
+:toc-title:
+:toclevels: 99
+toc::[]
+
+# Keycloak
+Create client as:
+
+[source,json]
+----
+{
+  "id" : "e6b1cd29-97e6-4b31-ad4e-a7d6bd4353ce",
+  "clientId" : "grafana",
+  "rootUrl" : "",
+  "adminUrl" : "",
+  "baseUrl" : "http://keycloak.computingforgeeks.com:3000",
+  "surrogateAuthRequired" : false,
+  "enabled" : true,
+  "alwaysDisplayInConsole" : false,
+  "clientAuthenticatorType" : "client-secret",
+  "redirectUris" : [ "http://keycloak.computingforgeeks.com:3000/*", "http://192.168.1.98:3000/login/generic_oauth" ],
+  "webOrigins" : [ "" ],
+  "notBefore" : 0,
+  "bearerOnly" : false,
+  "consentRequired" : false,
+  "standardFlowEnabled" : true,
+  "implicitFlowEnabled" : false,
+  "directAccessGrantsEnabled" : false,
+  "serviceAccountsEnabled" : false,
+  "publicClient" : false,
+  "frontchannelLogout" : false,
+  "protocol" : "openid-connect",
+  "attributes" : {
+    "saml.assertion.signature" : "false",
+    "saml.force.post.binding" : "false",
+    "saml.multivalued.roles" : "false",
+    "saml.encrypt" : "false",
+    "saml.server.signature" : "false",
+    "saml.server.signature.keyinfo.ext" : "false",
+    "exclude.session.state.from.auth.response" : "false",
+    "saml_force_name_id_format" : "false",
+    "saml.client.signature" : "false",
+    "tls.client.certificate.bound.access.tokens" : "false",
+    "saml.authnstatement" : "false",
+    "display.on.consent.screen" : "false",
+    "saml.onetimeuse.condition" : "false"
+  },
+  "authenticationFlowBindingOverrides" : { },
+  "fullScopeAllowed" : true,
+  "nodeReRegistrationTimeout" : -1,
+  "protocolMappers" : [ {
+    "id" : "abc4af1d-322c-497f-b074-3070816611a3",
+    "name" : "username",
+    "protocol" : "openid-connect",
+    "protocolMapper" : "oidc-usermodel-property-mapper",
+    "consentRequired" : false,
+    "config" : {
+      "userinfo.token.claim" : "true",
+      "user.attribute" : "username",
+      "id.token.claim" : "true",
+      "access.token.claim" : "true",
+      "claim.name" : "preferred_username",
+      "jsonType.label" : "String"
+    }
+  }, {
+    "id" : "2b0ada3f-1c33-4ec8-ad3c-7448dab2802d",
+    "name" : "family name",
+    "protocol" : "openid-connect",
+    "protocolMapper" : "oidc-usermodel-property-mapper",
+    "consentRequired" : false,
+    "config" : {
+      "userinfo.token.claim" : "true",
+      "user.attribute" : "lastName",
+      "id.token.claim" : "true",
+      "access.token.claim" : "true",
+      "claim.name" : "family_name",
+      "jsonType.label" : "String"
+    }
+  }, {
+    "id" : "ceef57f8-cb1d-43b0-83de-1abd49598a21",
+    "name" : "given name",
+    "protocol" : "openid-connect",
+    "protocolMapper" : "oidc-usermodel-property-mapper",
+    "consentRequired" : false,
+    "config" : {
+      "userinfo.token.claim" : "true",
+      "user.attribute" : "firstName",
+      "id.token.claim" : "true",
+      "access.token.claim" : "true",
+      "claim.name" : "given_name",
+      "jsonType.label" : "String"
+    }
+  }, {
+    "id" : "073c9760-3380-4699-a69e-9c776e2eaaeb",
+    "name" : "Client Host",
+    "protocol" : "openid-connect",
+    "protocolMapper" : "oidc-usersessionmodel-note-mapper",
+    "consentRequired" : false,
+    "config" : {
+      "user.session.note" : "clientHost",
+      "id.token.claim" : "true",
+      "access.token.claim" : "true",
+      "claim.name" : "clientHost",
+      "jsonType.label" : "String"
+    }
+  }, {
+    "id" : "8e0a1fb8-c79e-4704-a9cb-21950377c37e",
+    "name" : "group",
+    "protocol" : "openid-connect",
+    "protocolMapper" : "oidc-group-membership-mapper",
+    "consentRequired" : false,
+    "config" : {
+      "full.path" : "true",
+      "id.token.claim" : "true",
+      "access.token.claim" : "true",
+      "claim.name" : "group",
+      "userinfo.token.claim" : "true"
+    }
+  }, {
+    "id" : "3ab56418-72c8-4559-a3f7-9a0eb4ff27b2",
+    "name" : "full name",
+    "protocol" : "openid-connect",
+    "protocolMapper" : "oidc-full-name-mapper",
+    "consentRequired" : false,
+    "config" : {
+      "id.token.claim" : "true",
+      "access.token.claim" : "true",
+      "userinfo.token.claim" : "true"
+    }
+  }, {
+    "id" : "092b86eb-5c8e-4a9a-870c-261a28fdf1f7",
+    "name" : "Client ID",
+    "protocol" : "openid-connect",
+    "protocolMapper" : "oidc-usersessionmodel-note-mapper",
+    "consentRequired" : false,
+    "config" : {
+      "user.session.note" : "clientId",
+      "id.token.claim" : "true",
+      "access.token.claim" : "true",
+      "claim.name" : "clientId",
+      "jsonType.label" : "String"
+    }
+  }, {
+    "id" : "b0d2b047-d929-423d-a423-f7c07e8495fa",
+    "name" : "Client IP Address",
+    "protocol" : "openid-connect",
+    "protocolMapper" : "oidc-usersessionmodel-note-mapper",
+    "consentRequired" : false,
+    "config" : {
+      "user.session.note" : "clientAddress",
+      "id.token.claim" : "true",
+      "access.token.claim" : "true",
+      "claim.name" : "clientAddress",
+      "jsonType.label" : "String"
+    }
+  }, {
+    "id" : "b6915487-9a4b-40ba-9e11-4582d2df4024",
+    "name" : "email",
+    "protocol" : "openid-connect",
+    "protocolMapper" : "oidc-usermodel-property-mapper",
+    "consentRequired" : false,
+    "config" : {
+      "userinfo.token.claim" : "true",
+      "user.attribute" : "email",
+      "id.token.claim" : "true",
+      "access.token.claim" : "true",
+      "claim.name" : "email",
+      "jsonType.label" : "String"
+    }
+  }, {
+    "id" : "c8160748-f1df-409a-9756-f6882a64f53a",
+    "name" : "role",
+    "protocol" : "openid-connect",
+    "protocolMapper" : "oidc-usermodel-realm-role-mapper",
+    "consentRequired" : false,
+    "config" : {
+      "id.token.claim" : "true",
+      "access.token.claim" : "true",
+      "claim.name" : "role",
+      "multivalued" : "true",
+      "userinfo.token.claim" : "true"
+    }
+  } ],
+  "defaultClientScopes" : [ "web-origins", "role_list", "profile", "roles", "email" ],
+  "optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ],
+  "access" : {
+    "view" : true,
+    "configure" : true,
+    "manage" : true
+  }
+
+----
+
+The important thing is to create group and role mapping which will be used by Grafana setup.
+
+
+# Grafana
+
+Contents of `grafana.ini`:
+
+```bash
+[root@keycloak grafana]# grep -v '^;\|^$\|^#' grafana.ini
+[paths]
+[server]
+domain = keycloak.computingforgeeks.com
+enforce_domain = true
+root_url = http://keycloak.computingforgeeks.com:3000
+[auth]
+disable_login_form = true
+disable_signout_menu = false
+signout_redirect_url = http://keycloak.computingforgeeks.com:8080/auth/realms/computingforgeeks.com/protocol/openid-connect/logout?redirect_uri=http://keycloak.computingforgeeks.com:3000/login
+oauth_auto_login = true
+[auth.generic_oauth]
+enabled = true
+name = Oauth
+allow_sign_up = true
+client_id = grafana
+client_secret = 16424d97-ccb8-452a-a21a-69c0e07f2441
+scopes = openid email profile ldap-group-mapping
+auth_url = http://keycloak.computingforgeeks.com:8080/auth/realms/computingforgeeks.com/protocol/openid-connect/auth
+token_url = http://keycloak.computingforgeeks.com:8080/auth/realms/computingforgeeks.com/protocol/openid-connect/token
+api_url = http://keycloak.computingforgeeks.com:8080/auth/realms/computingforgeeks.com/protocol/openid-connect/userinfo
+role_attribute_path = contains(role[*], 'admin') && 'Admin' || contains(role[*], 'new_admins') && 'Admin' || 'Viewer'
+tls_skip_verify_insecure = true
+[emails]
+[log]
+level = debug
+```
+
+Value from `role_attribute_path` will be evaluted via https://jmespath.org/[jmespath]
+
+
+# References
+[%hardbreaks]
+https://grafana.com/docs/grafana/latest/auth/generic-oauth/

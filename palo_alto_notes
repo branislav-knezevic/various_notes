@@ -1,0 +1,7 @@
+Monitor tab # to monitor which traffic is going through or being blocked
+  to filter out which traffic need to be shown, click on an IP in Destination column to get the filter and then adjust it
+
+To set up NAT
+  On Policies tab
+    In Security - add IPS from which it will work
+    In NAT set up the rules which are needed

@@ -1,0 +1,87 @@
+containers
+
+docker container run -it [image-name] sh # sh is shell process 
+docker container exec -it [container-name] [process] # e.g. sh process
+docker container exec [container-name] [command] [file-name] # will execute commands on files from the container
+	docker container exec cont1 cat textFile # will output content of the text file-name
+docker port [container-name] # shows list of mapped ports
+docker logs [container-name] # view container logs for specific container
+
+logs
+
+Daemon logs:
+	systemd
+		journalctl -u docker.service
+	non-systemd
+		/var/log/messages
+	Windows
+		~/AppData/Local/Docker
+Container logs
+	docker logs [container-name]
+
+Swarms
+
+docker swarm join-token --rotate [manager/worker] # create new token 
+sudo openssl x509 -in /var/lib/docker/swarm/certificates/swarm-node.crt -text # get certificate used in swarm
+	Subject: O=g99te1gz4gf618ztow7u6xwab, OU=swarm-manager, CN=ovxln4nk7hagtvmm5fzp4deff
+		O=g99te1gz4gf618ztow7u6xwab		# swarm id
+		OU=swarm-manager				# node role
+		CN=ovxln4nk7hagtvmm5fzp4deff	# node id
+Locking the swarm # prevents restarted Managers from automatically re-joining the Swarm and prevents accidentally restoring old copies of the Swarm
+docker swarm init --autolock # autolock new swarm
+docker swarm update --autolock=true # autolock existing swarm. make sure to copy the given key as only with it it will be able to re-join the swarm
+	key example: SWMKEY-1-rcOBCjAe0eLdHzDg3NwP+xJhBDryQHa2Q8MRSZj09d4
+	
+Network
+
+Bridge Networking (NAT) # 
+	most commonly used
+	containers on different hosts can''t talk to each other
+	only way to get to the internet is port mapping
+Overlay Networking
+	single L2 network spanning multiple hosts
+	new virtual network is created and containers are then joined to it
+	used only to enable containers to talk to each other
+MACVLAN (transperent driver on Windows)
+	all containers get their IP and MAC
+	must allow promiscous mode on the host NIC # cloud providers generally don't allow that 
+
+docker network ls # lists all available networks
+docker network inspect brigde # more details on bridge adapter
+docker network inspect nat # same thing on windows
+docker network inspect [adapter-name] # more info on specific adapter
+docker network create -d [driver-name] [network-name] # creates new bridge network with specified name. Driver bridge/overlay
+
+Network Services
+	Service Discovery # locate services in a swarm
+	Load Balancing # allows to access the service on any node in a swarm, even though it is not even hosting the service
+When two services are created on the same overlay network they are pingable by name because of swarm DNS
+
+Volumes
+
+like shared drives between containers.
+Persistent storage unlike container storage which is ephimeral
+Default location
+	/var/lib/docker/volumes
+
+docker volume create [volume-name]
+docker volume ls...
+docker volume inspect...
+docker volume rm ...
+docker container run -dit --name [container-name] --mount source=[volume-name],target=[path] [image-name]:[version] # run a container and mount volume on specific directory
+	docker container run -dit --name voltest --mount source=bkvolume,target=/vol alpine:latest
+	
+Stacks
+Stack document:
+	version
+	services
+	networks
+	volumes
+
+docker stack create -c [yaml-file] [stack-name] # create stack from specified yaml file 
+docker stack ls/ps/rm
+docker stack services [stack-name] # similar as docker stack ps [stack-name]
+after YAML file is updated, command docker stack create -c [yaml-file] [stack-name] need to be run again
+
+	
+	

@@ -1,0 +1,2 @@
+/var/www/html # location for default indexed
+/etc/apache2 # main directory for apache config Files

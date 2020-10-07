@@ -1,0 +1,111 @@
+# Puppet notes
+
+## Commands
+
+puppet facts # grabs 
+puppet apply -tv # pull changes from the puppet server
+
+## General notes
+
+Hiera # key value store, stores the cattalogue as well
+Catallogue tells what configuration goes to each server
+Cattalogue converge # when an agent and server exchange messages about the applied changes
+Puppet Forge # place online where all modules are stored
+Modules and manifests # end state server descriptions
+
+## Installation
+
+Download repo and run install
+
+## Usefull commands
+
+### Master
+puppet module list # lists all instaled modules
+puppet parser validate <.pp_file> # validate file syntax
+
+### Agent
+puppet agent -t # force the pull of changes from master
+
+
+## Basic configuration
+
+### Master configuration
+
+main configuration 
+`/etc/puppetlabs/puppet/puppet.conf`
+JVM configuration
+`/etc/default/puppetserver`
+executable file 
+`/opt/puppetlabs/bin/puppetserver`
+main module configuration is locate in
+`/etc/puppetlabs/code`
+
+
+### Agent configuration
+
+if needed set the hosts file
+or add [main] section to 
+`/etc/puppetlabs/puppet/puppet.conf`
+or via puppet cli
+`/opt/puppetlabs/bin/puppet config set server <server_name>`
+on agent after installing puppet run `puppet agent --fingerprint` this will issue a cert request
+then on master check if the request is present with
+`sudo puppetserver ca list`
+approve with `sudo puppetserver ca sign --certname <agent_name>`
+
+## Modules and environments
+
+main dir for this is 
+`/etc/puppetlabs/code`
+both modules and environments are stored here
+when a new module is needed, option is to create a new dir under modules
+other option is to use puppet development kit `install pdk`
+`pdk new module <module_name>` etc nginx
+
+Module # same like role in Ansible, for specific intallation nginx, apache...
+Manifests # files which store class definitions
+Class # configures one unit of the overall module installation
+new class is installed via `pdk new class install` this will create an `install.pp` file
+this command needs to be run from the root of the  module directory
+Resource type # preconfigured function which performs a specific action on the node
+Class example
+```
+class nginx::install {
+    package { 'install_nginx': # always lowercase
+        name   => 'nginx', # best practise is to allign all =>
+        ensure => 'present',
+    }
+}
+```
+All classes can be validated with `puppet parser validate install.pp` # like a main.yml file in ansible
+`init.pp` class is a class which every single module needs to have
+`pdk new class <module_name>`
+```
+class nginx { # list which classes are going to be triggered by this function
+  contain nginx::install
+  contain nginx::config
+  contain nginx::service
+
+  Class['nginx::install'] # set order in which services are done
+  -> Class['nginx::config'] # regular -> calls that class each time
+  ~> Class['nginx::service'] # tilda ~> means that this is a notification class and only is executed when the previous one made some changes
+}
+
+```
+Next `site.pp` file needs to be configured. Location for is:
+`/etc/puppetlabs/code/environments/production/manifests/site.pp`
+Content:
+```
+node <agent_fqdn> {
+    class { 'nginx': } # which class/module to include
+}
+
+Setting up addtional configuration for a class
+create config class
+ass nginx::config {
+  file { 'nginx_config':
+    path   =>  '/etc/nginx/nginx.conf', # place on a client
+    source => 'puppet:///modules/nginx/rh-nginx.conf # /// is a replacement for /etc/puppet/environtmets/production directory ,     path to file dir doesnt need to be specified
+    ensure => 'present',
+  }
+}

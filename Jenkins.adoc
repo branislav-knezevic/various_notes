@@ -1,0 +1,104 @@
+:toc: macro
+:toc-title:
+:toclevels: 99
+toc::[]
+
+# Keycloak
+Create realm and client as:
+
+```json
+{
+"id" : "af27f3af-ea50-452d-bc56-d28069cdbf29",
+"clientId" : "jenkins",
+"rootUrl" : "http://jenkins.computingforgeeks.com:8080/",
+"adminUrl" : "http://jenkins.computingforgeeks.com:8080/",
+"surrogateAuthRequired" : false,
+"enabled" : true,
+"alwaysDisplayInConsole" : false,
+"clientAuthenticatorType" : "client-secret",
+"redirectUris" : [ "http://jenkins.computingforgeeks.com:8080/*" ],
+"webOrigins" : [ "http://jenkins.computingforgeeks.com:8080/" ],
+"notBefore" : 0,
+"bearerOnly" : false,
+"consentRequired" : false,
+"standardFlowEnabled" : true,
+"implicitFlowEnabled" : false,
+"directAccessGrantsEnabled" : true,
+"serviceAccountsEnabled" : false,
+"publicClient" : true,
+"frontchannelLogout" : false,
+"protocol" : "openid-connect",
+"attributes" : {
+"saml.assertion.signature" : "false",
+"saml.force.post.binding" : "false",
+"saml.multivalued.roles" : "false",
+"saml.encrypt" : "false",
+"saml.server.signature" : "false",
+"saml.server.signature.keyinfo.ext" : "false",
+"exclude.session.state.from.auth.response" : "false",
+"saml_force_name_id_format" : "false",
+"saml.client.signature" : "false",
+"tls.client.certificate.bound.access.tokens" : "false",
+"saml.authnstatement" : "false",
+"display.on.consent.screen" : "false",
+"saml.onetimeuse.condition" : "false"
+},
+"authenticationFlowBindingOverrides" : { },
+"fullScopeAllowed" : true,
+"nodeReRegistrationTimeout" : -1,
+"defaultClientScopes" : [ "web-origins", "role_list", "profile", "roles", "email" ],
+"optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ],
+"access" : {
+"view" : true,
+"configure" : true,
+"manage" : true
+}
+```
+
+In client "jenkins" select tab "Installation" - format "Keycloak OIDC JSON" - copy to clipboard.
+
+[Optional] Create roles jenkins_admins/jenkins_readonly.If ldap is used those roles can be pulled from ldap and thus one doesn't need to create them.
+
+# Install jenkins
+Install java and setup jenkins.
+
+```
+yum install java-1.8.0-openjdk-devel -y
+curl --silent --location http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo | sudo tee /etc/yum.repos.d/jenkins.repo
+rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+yum install jenkins mc vim -y
+systemctl start jenkins
+systemctl enable jenkins
+```
+
+## Install plugins
+[%hardbreaks]
+Install following plugins on jenkins:
+* `Keycloak Authentication Plugin` - it will be used for authentication to keycloak
+* `Role-based Authorization Strategy` - it will be used for role based auth with keycloak
+
+After installation of these plugins goto Manage Jenkins->Configure System->Global Keycloak Settings and paste output from `"Keycloak OIDC JSON"` and save.
+
+## Create Manage Roles
+[%hardbreaks]
+Goto Manage Jenkins->Manage and Assign Roles->Manage Roles->Global Roles - (if not present) add role "admin" with all checkboxes selected - SAVE.
+Goto Manage Jenkins->Manage and Assign Roles->Manage Roles->Global Roles - add role "read_only" with "Overall Read" selected - SAVE
+
+## Create Assign Roles
+[%hardbreaks]
+Goto Manage Jenkins->Manage and Assign Roles->Assign Roles - add group "jenkins_admin" to global roles and select "admin" - SAVE
+Goto Manage Jenkins->Manage and Assign Roles->Assign Roles - add group "jenkins_readonly" to global roles and select "read_only" - SAVE
+
+## Update auth and realm
+[%hardbreaks]
+Goto "Configure Global Security" and select "Security Realm": "Keycloak Authentication Plugin"
+Goto "Configure Global Security" and select "Authorization": "Role-Based Strategy" - SAVE
+
+# Testing
+You should be redirected now to the Keycloak login. Try to log in as admin with admin rights, and as named user with read only rights.
+
+# References
+[%hardbreaks]
+https://stackoverflow.com/questions/56042425/how-to-set-role-based-login-for-jenkins-in-keycloak
+https://joostvdg.github.io/blogs/kubernetes-sso-keycloak/#sso-with-jenkins
+https://www.janua.fr/mapping-ldap-group-and-roles-to-redhat-sso-keycloak/

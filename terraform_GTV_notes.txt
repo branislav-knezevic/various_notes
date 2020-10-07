@@ -1,0 +1,100 @@
+Terraform - koriste za deploy infrastrukture na AWS
+	ne postoji na .com platformi
+	na GO je sve na Terraform ali je nestabilno
+	proveriti nas Git ima nekih primera
+		add another service under service modules
+		db in mysql has to be less than 16 characters so that needs to be reduced (if needed)
+		db, user and password, is created manually via script, (there is a screenshot on it)
+		run /opt/gtv/Infrastructure/terraform/Integration # no additional variables, just terraform apply
+		go to kubenetes folder (outsite of terraform), modify service-rbac.yaml file and rbac.yaml
+		then run kubectl apply -f <rbac.yaml>
+		configure spinnaker deployment
+			token is created or read from some script on Andy''s computer
+		jenkins creates deployment automatically based on Jenkinsfile (investigate)
+		check k8s logs after spinnaker deployment
+		Terraform procedure:
+			from staging/integration folder run terraform apply
+			it uses modules	
+				../services/<service_name>
+					iam.tf uses
+					../../modules/service-iam-role
+					service.tf uses
+					../../modules/boot-kube-service
+				../modules/service-shared-mysql
+
+# Terraform is ran from integration folder:
+
+'integration'
+aws.tf
+	Assume role OrganizationAccountAccessRole # has full admin access
+	Uses [default] credentials from .aws/credentials and profile from .aws/config
+backend.tf
+	Pull some infrasturcure data from s3 # path 'gtv-prod-infra-tf-state/gtv-infra/state/env/integration/'
+services.tf
+	Also pulls some data from S3
+		'gtv-prod-infra-tf-state/gtv-infra/state/endpoints-integration/'
+		'gtv-prod-infra-tf-state/gtv-infra/state/kubernetes'
+		'gtv-prod-infra-tf-state/gtv-infra/state/testenv'
+	Sets variables for Kafka and Zookeper
+	Pulls module for DB
+		'modules/service-shared-mysql'
+		groups.tf
+			creates security group, name is shareddb-<environemnt>
+			source security group is pulled from kubernetes data file <worker_security_group>
+		rds.tf
+			creates RDS cluser
+			creates required number of DB instances
+		vars.tf
+			specifes backup retention period, instance count and type
+	Pulls module for each service
+	Sets several variables for this service	
+		'services/<service_name>'
+		iam.tf
+			creates IAM role for this service
+			Pulls module for iam-role
+				'modules/service-iam-role'
+				creates a policy which allows any instance which has a specific role to assume this role
+				# in this case it would be any k8s wokrer node
+				crates a role for this service <env>-<service_name>
+		vars.tf
+			nothing specific
+		service.tf
+			Pulls module for kube-service
+			'modules/boot-kube-service'
+				service.tf
+					creates kubernetes service with specific load balancer
+				vars.tf
+					nothing specific
+			Creates kubernetes secret for mysql user name and password # these are set in first level services.tf
+			creates kubernetes service account
+			creates kubernetes config map
+		vars.tf
+			nothing specific
+		# for some services also
+		dynamo.tf
+			creates a dynamo table with few columns
+			if this exists, additional policy document for access to DynamoDB is added here as well
+			and it needs to be added in data fields for the config map
+		bucket.tf
+			creates a bucket policy with specific permissions who can access this bucket
+			creates a bucket and applies this bucket policy
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		

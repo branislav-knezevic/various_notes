@@ -1,0 +1,39 @@
+ctrl
+    `     # bring up terminal
+    file  # open files side by side
+    b     # open/close side panel
+    p     # searching for files
+    F2    # selects all occurrences of a word
+    /     # toggle comment
+    \     # split editor
+    space # opens auto-complete
+    c     # entire line can be copied if nothing in it is selected
+    g     # go to line (number)
+    z     # undo
+    f     # find in current file
+    w     # close tab
+    d     # select next occurrence of a selected word
+    tab   # go through tabs
+    shift + i # format whole document
+    shift + f # find in project
+    shift + z # redo
+    shift + \ # when in front of open bracket to go to close bracket
+    shift + o # opens symbols in the current file
+    k shift + f # format selection
+    alt + n # run code
+
+
+alt
+    click on multiple places in a file # multiple cursors
+    up/down arrow # without previous selection, move text up/down
+    shift + l/r arrow  # shrink/expand selection
+    while clicking on split icon changes from vertical to horizontal
+
+F5 # start debug
+   # before debugging set the breakpoint if necessary
+   step in
+   step over # buttons which go into parts code for debugging
+   step out  # exit the step in debugging
+   right click run to cursor # runs debug with this temp breakpoint
+
+F12 # go to definition

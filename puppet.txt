@@ -1,0 +1,437 @@
+▶ cat HOME.adoc 
+:toc: macro
+:toc-title:
+:toclevels: 99
+toc::[]
+# GENERAL
+
+- declarative specification
+- client-server (node/master)
+- communication via SSL over tcp port 8140
+
+## RESOURCE DECLARATION AND VARIABLES
+
+All types have a special attribute called the `namevar`. This is the attribute used to uniquely identify a resource on
+the target system. If you don’t specifically assign a value for the `namevar`, its value will default to the title of
+the resource.
+
+```
+file { '/etc/passwd':
+  owner => 'root',
+  group => 'root',
+  mode  => '0644',
+}
+```
+In this code, `/etc/passwd` is the title of the file resource; other Puppet code can refer to the resource as
+`File['/etc/passwd']` to declare relationships. Because path is the `namevar` for the file type and we did not provide a
+value for it, the value of path will default to /etc/passwd.
+
+- type - package, file, service, user
+- title - 'mile', 'kitic', 'juzni-vetar'
+- attributes/parameters
+- provider
+- boolean must be used without quotes
+- use single quotes for any value that does not contain a variable -> `attrib1 => 'mile'`
+- use double quotes for any value with strings containing variables -> `attrib2` => "test-${domain}"`
+- use `@()` heredoc for multiline format
+- variables may not be redefined in Puppet within a given namespace or scope
+- don't use braces for variables that stand alone -> `attrib3` => $domain ( considering that `$domain` is defined
+
+```
+$message_text = @(END)
+This is a very long message,
+which will be composed over
+many lines of text.
+END
+```
+or with variables
+```
+$message_text = @("END")
+Dear ${user},
+Your password is ${password}.
+Please login at ${site_url} to continue.
+END
+```
+
+
+```
+resource_type { 'resource_title':
+  ensure => present,
+  attrib1 => 1234, # numeric type
+  attrib2 => 'value', # string type
+  attrib3 => ['value1','value2'], # array of string types
+  noop => false # boolean type
+}
+```
+
+It is also possible to pass a hash of attribute names and values in to a resource definition.
+```
+$resource_attributes = {
+  ensure   => present,
+  owner    => 'root',
+  group    => 'root',
+  'mode'   => '0644',
+ 'replace' => true,
+}
+
+file { '/etc/config/first.cfg':
+  source => 'first.cfg',
+  *      => $resource_attributes,
+}
+
+file { '/etc/config/second.cfg':
+  source => 'config.cfg',
+  *      => $resource_attributes,
+}
+```
+
+
+## FINDING FILE BACKUPS
+Every file changed by a Puppet file resource is backed up on the node in a directory
+specified by the `$clientbucketdir` or `$bucketdir` configuration setting.
+
+## CONFIGURATION RUN
+
+1. `node`- send facts about itself to master (cpu,os,blocks,mem)
+2. `master` - classifying node based on puppet manifests
+3. `master` - compiles a catalog and send it to node
+    - desired state of each resource
+    - resolving dependencies
+4. `node` - applies the catalog and report resuluts to master
+
+## PUPPET COMPONENTS
+
+`hiera` - component to load data used by Puppet manifests and modules.It allows you to
+provide default values and then to override or expand them through a customizable
+hierarchy
+
+`MCollective (mc)` - orchestration framework tightly integrated with Puppet
+
+## FACTS
+Before requesting a catalog (or compiling one with puppet apply), Puppet will collect system information with Facter. Puppet receives this information as facts, which are pre-set variables you can use anywhere in your manifests.
+Accessing facts from Puppet code can be via `$fact_name` or `$facts['fact_name']`.All facts appear in Pupept as [top-score variables link](https://puppet.com/docs/puppet/5.3/lang_scope.html).
+
+`$fact_name` - Works in all varsions of Puppet.It's not immediately obvious that you're using a fact - someone reading your code needs to know which facts exists to guess that you're accessing a top-score variable.To make your code easier for other to read, use the `$::fact_name` syntax as a hint, to show that it's accessing a top-scope variable.
+`$facts['fact_name']` - Alternatively, facts are structured in a `$facts` hash, and your manifest code can access them as `$facts['fact_name']`. The variable name `$facts` is reserved, so local scopes cannot re-use it. Structured facts show up as a nested structure inside the `$facts` namespace, and can be accessed using Puppet's normal hash access syntax.
+
+
+use curly braces to fetch facts in manifest
+```
+if $facts['os']['name'] == 'Ubuntu' {
+  notice ("Operating system is: ${facts['os']['name']}")
+}
+```
+
+### BUILT-IN VARIABLES
+In addition to Facter's core facts and custom facts, Puppet creates several variables for a node to facilitate managing it. These variables are called `$trusted`, `$server_facts`, agent facts, master variables, and compiler variables.
+
+## CONDITIONALS
+
+if/else
+```
+if ($coffee != 'drunk') {
+  notify { 'best-to-avoid': }
+}
+elsif ('scotch' == 'drunk') {
+  notify { 'party-time': }
+}
+else {
+  notify { 'party-time': }
+}
+```
+
+unless
+```
+unless $facts['kernel'] == Linux {
+  notify { 'You are on an older machine.': }
+}
+else {
+  notify { 'We got you covered.': }
+}
+```
+
+case
+```
+case $what_she_drank {
+  'wine':            { include state::california }
+  $stumptown:        { include state::portland }
+  /(scotch|whisky)/: { include state::scotland }
+  is_tea( $drink ):  { include state::england }
+  default:           {} # always use default even if the default is not doing anything
+}
+```
+
+## ITERATIONS
+
+`each` - acts on each entry in an array, or each key/value pair in a hash.
+```
+each( $facts['partitions'] ) |$name, $device| {
+  notice( "${facts['hostname']} has device $name with size ${device['size']}" )
+}
+```
+
+`filter` - returns a subset of the array or hash that were matched by the lambda.
+```
+$data = ["orange", "blueberry", "raspberry"]
+$filtered_data = $data.filter |$items| { $items =~ /berry$/ }
+# $filtered_data = [blueberry, raspberry]
+```
+
+`map` - returns an Array from the results of the lambda.
+```
+# For the array $data, return an array containing each value multiplied by 10
+$data = [1,2,3]
+$transformed_data = $data.map |$items| { $items * 10 }
+# $transformed_data contains [10,20,30]
+```
+
+`reduce` - processes an array or hash and returns only a single value.
+```
+# Reduce the array $data, returning the sum of all values in the array.
+$data = [1, 2, 3]
+$sum = $data.reduce |$memo, $value| { $memo + $value }
+# $sum contains 6
+```
+
+`slice` - creates small chunks of a specified size from an array or hash.
+```
+slice([1,2,3,4,5,6], 2) # produces [[1,2], [3,4], [5,6]]
+```
+
+`with` - invokes a lambda exactly one time, passing the variables provided as parameters.
+```
+with( "austin", "powers", "secret agent" ) |$first,$last,$title| {
+  notice( "A person named ${first} ${last}, ${title} is here to see you." )
+}
+# A person named austin powers, secret agent is here to see you.
+```
+
+## RESOURCE PROCESSING
+- `alias` provides friendly names for resources with complicated or variable titles.
+- `noop` prevents changes to the resource.
+- `audit` logs changes to a resource outside of Puppet.
+- `loglevel` controls log output on a per-resource basis.
+- `tags` identifies resources to be evaluated on a filtered Puppet run.
+- `schedule` limits when or how often changes to a resource are permitted.
+An uppercase first letter on a resource declaration assigns default attribute
+values.
+```
+Package {
+  schedule => 'after-working-hours',
+}
+```
+
+`resource reference` - referring a resource with its name
+```
+package { 'puppet-agent':
+  ensure => present,
+}
+```
+```
+service { 'puppet':
+  ensure => running,
+  enabled => true,
+  require => Package['puppet-agent'], ## referring a package resource
+}
+```
+
+## OTHER
+
+`/opt/puppetlabs/bin/puppetserver ca setup` is preferred over simple CA architecture.Simple CA is using
+self signed root for CA siging as well.Intermdiate CA ( used via above cmd ) will use self signed CA root
+that issues an intermediate CA cert
+
+Differences between `include`,`require` and `contain`:
+- `include class` - it will include class but there will be no relationship between resources
+- `require class` - it will create relationships between parent and child classes
+- `contain class` - it will create relationships so that parent class will not continue until child class is not finish
+it has been finished its work
+
+## MODULES
+Use `pdk` for creating modules via `apt-get install pdk`
+
+`pdk new module nginx` - create new module with following structure
+```
+.
+├── CHANGELOG.md
+├── Gemfile
+├── Gemfile.lock
+├── README.md
+├── Rakefile
+├── appveyor.yml
+├── data/ # contain hiera data
+│   └── common.yaml
+├── examples/
+├── files/ # static files
+├── hiera.yaml
+├── manifests/ # configure module and classes
+├── metadata.json
+├── spec/
+│   ├── classes/
+│   ├── default_facts.yml
+│   └── spec_helper.rb
+├── tasks/
+└── templates/ # dynamic files
+```
+
+`pdk new class nginx` - create new class and init.pp ( every module must have it ) file
+
+`pdk new class bla` - create new class bla
+
+`class {'nginx':} == include nginx`
+
+`puppet:/// == puppet URI == /etc/puppetlabs/code/environments/production/
+or
+`puppet:///modules/<module_name>/<file_name>` - where file_name is not absolute path just file_name
+
+`Class['nginx::install'] -> Class['nginx::config']` - ordering from left to right
+
+`Class['nginx::install'] ~> Class['nginx::config']` - 2nd Class will be called only if first is changed
+
+`puppet module install puppetlabs-puppetdb` - installing module from forge
+
+`puppet node status FQDN` - checking when node get his last catalog
+
+## HIERA
+Hiera lets us store key-value pairs in a hierarchy of directories.There are 3 options to define key/value:
+
+`modules` - /etc/puppetlabs/code/<ENVIRONMENT>/modules/<MODULE>/hiera.yaml
+
+`environment` - /etc/puppetlabs/code/environments/<ENVIRONMENT>/hiera.yaml # has more precedence then module one
+
+`architecture-wide` - /etc/puppetlabs/puppet/hiera.yaml
+
+```
+class nginx (
+  $package_name = $nginx::params::package_name,
+  $config_path = $nginx::params::config_path,
+  $config_source = $nginx::params::config_source,
+  $service_name = $nginx::params::service_name,
+  String $package_ensure, # if hiera is used we only need to define our variables in top of the class, not in each file
+  String $config_ensure,
+  String $service_ensure,
+  Boolean $service_enable,
+  Boolean $service_hasrestart
+) inherits nginx::params {
+  contain nginx::install
+  contain nginx::config
+  contain nginx::service
+
+  Class['nginx::install']
+  -> Class['nginx::config']
+  ~> Class['nginx::service']
+}
+```
+
+`puppet lookup --node FQDN --compile <anything>` - testing hiera lookup
+
+### MANAGING SECRETS
+All secrets in puppet repo must be encrypted.For this purpose hiera-eyaml and hiera-eyaml-kms were used on puppetserver.Process for it involves encryption of needed string on workstation setup and setting given output in puppet repo.Afterwards, puppetmaster will use proper permissions ( gathered from assigned IAM role ) to decrypt related string using KMS and propagate it to the target box.
+
+
+#### Worskstation setup
+One should install following gems via:
+
+`gem install hiera-eyaml hiera-eyaml-kms`
+
+and setup eyaml config as:
+```
+▶ cat $HOME/.eyaml/config.yaml
+---
+kms_key_id: 'alias/PuppetMaster'
+kms_aws_region: 'eu-west-1'
+kms_aws_profile: 'AWS_PROFILE' ### CHANGE it to your AWS profile
+Afterwards, one can use following command for encryption and decryption:
+```
+
+#### Encryption
+```
+eyaml encrypt -n KMS -s 'ChangeMe123' -l "admin_password"
+admin_password: ENC[KMS,AQICAHjUUj7N8eaqjP+IWjYBHlkTvStjqisX6XxUfKPs2BeLQwGQez1g18bQqwwampfJkq6nAAAAaTBnBgkqhkiG9w0BBwagWjBYAgEAMFMGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMwOq7CLwBIixRFn9EAgEQgCZ6gCVg78UMVcZsD9smDS4S2hY6ty5YwP92V4h8BlL/mFbgpJPakA==]
+```
+where:
+`-n` is defining encryption type  
+`-s` is used for string which needs to be encrypted  
+`-l` is used for defining a key which will be printed before encrypted string  
+
+Output of the `eyaml encrypt …  command` 
+```
+freeipa::master::admin_password: ENC[KMS,AQICAHjUUj7N8eaqjP+IWjYBHlkTvStjqisX6XxUfKPs2BeLQwGQez1g18bQqwwampfJkq6nAAAAaTBnBgkqhkiG9w0BBwagWjBYAgEAMFMGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMwOq7CLwBIixRFn9EAgEQgCZ6gCVg78UMVcZsD9smDS4S2hY6ty5YwP92V4h8BlL/mFbgpJPakA==]
+```
+should be placed in puppet repo in related yaml file.
+
+
+#### Decryption
+```
+eyaml decrypt -n KMS -s "ENC[KMS,AQICAHjUUj7N8eaqjP+IWjYBHlkTvStjqisX6XxUfKPs2BeLQwGQez1g18bQqwwampfJkq6nAAAAaTBnBgkqhkiG9w0BBwagWjBYAgEAMFMGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMwOq7CLwBIixRFn9EAgEQgCZ6gCVg78UMVcZsD9smDS4S2hY6ty5YwP92V4h8BlL/mFbgpJPakA==]"
+ChangeMe123
+```
+Same as for encryption we have `-n` for encryption type and `-s` for the string which needs decryption.Output of the above command will be printed in next line.
+
+## TEMPLATES
+```
+class nginx::vhosts (
+  $vhosts_dir = $nginx::params::vhosts_dir,
+) inherits nginx::params {
+  file { "${nginx::vhosts_name}.conf":
+    #content => epp('nginx/vhosts.conf.epp'), # it will use puppet variable syntax as $nginx::vhosts_name
+    content => template('nginx/vhosts.conf.erb'), # it will use ruby variable syntax as @var or scope['nginx::vhosts_name']
+    ensure  => $nginx::vhosts_ensure, # hiera
+    path    => "${vhosts_dir}/${nginx::vhosts_name}.conf",
+  }
+  file {"$nginx::vhosts_root":
+    ensure => 'directory',
+  }
+}
+```
+
+
+## COMMANDS
+
+### puppetmaster
+
+list certs
+
+```
+puppetservice ca list --all
+```
+
+sign cert
+```
+puppetservice ca sign --certname ${HOSTNAME}
+```
+
+
+remove cert for an agent
+
+```
+puppetserver ca clean --certname ${HOSTNAME}
+```
+
+### node
+
+viewing resources
+
+```
+puppet resource <resource_type> <resource_title>
+```
+
+describing resources
+
+```
+puppet describe <resource_type>
+```
+
+listing all types
+
+```
+puppet resource --types
+```
+
+# USEFULL LINKS
+https://puppet.com/docs/puppetdb/4.4/connect_puppet_master.html  
+https://www.example42.com/2017/08/21/encrypt-your-secrets-with-hiera-eyaml/  
+https://www.bountysource.com/issues/43324885-aws-kms-iam-integration  
+https://phalient.tech/blog/2019-06-17-puppet-hiera-eyaml-and-aws-kms/  
+https://github.com/adenot/hiera-eyaml-kms  
+https://github.com/voxpupuli/hiera-eyaml

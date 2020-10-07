@@ -1,0 +1,11 @@
+# Notes for setting certificates for custom local docker registry
+
+openssl genrsa -out devdockerCA.key 2048
+	# generate private key
+openssl req -x509 -new -nodes -key devdockerCA.key -days 10000 -out devdockerCA.crt
+	# generate self-signed certificate with specified private key
+openssl genrsa -out domain.key 2048
+	# generate private key
+openssl req -new -key domain.key -out dev-docker-registry.com.csr 
+	# generaates Certificate Signing Request from an existing private key
+	# 

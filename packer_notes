@@ -1,0 +1,11 @@
+# Packer Notes
+
+## Packer troubleshooting on Amazon
+
+If packer fails to build an instance, and it destorys it at the end in order to troubleshoot that connection to that instance is needed
+In order to do that add this to packer JSON file:
+"ssh_keypair_name": "<name_of_keypair>",
+"ssh_private_key_file": "<path_to_corresponding_private_key>"
+
+packer needs to be ran with the following command:
+packer build -on-error=abort ... 

@@ -1,0 +1,20 @@
+programs to intsall in ubuntu
+- meld
+- clusterssh
+- slack-desktop
+- aws-cli (pip is used)
+- telnet
+- terraform
+    download file, copy to /usr/bin and set propper permissions
+    338  unzip terraform_0.11.11_linux_amd64.zip
+    340  mv terraform /usr/bin
+    341  sudo mv terraform /usr/bin
+    343  chown root:root terraform
+    348  sudo chmod 664 terraform
+    352  chmod +x /usr/bin/terraform
+
+- mysql-client
+
+
+# for docker settings, not to require sudo permission each time
+sudo usermod -a -G docker $USER

@@ -1,0 +1,486 @@
+:toc: macro
+:toc-title:
+:toclevels: 99
+toc::[]
+
+# Helm general
+Helm helps you manage Kubernetes applications — Helm Charts help you define, install, and upgrade even the most complex Kubernetes application.
+
+Charts are easy to create, version, share, and publish — so start using Helm and stop the copy-and-paste.
+
+
+## Installation
+```bash
+curl -LO https://storage.googleapis.com/kubernetes-helm/helm-v2.14.3-linux-amd64.tar.gz
+tar -zxvf helm-v2.14.3-linux-amd64.tar.gz
+sudo mv linux-amd64/helm /usr/local/bin/helm
+```
+
+Helm is using same config as `kubectl` ( check `kubectl config view` to see default context )
+Helm(client) is communicating with Tiller(server in k8s) for managing resources inside k8s.
+
+## Tiller general
+
+Tiller is storing all info about releases in the ConfigMap inside namespace where Tiller is installed.One can search all CMs managed by tiller via:
+
+```
+▶ kubectl get configmap -n kube-system -l "OWNER=TILLER"
+NAME                      DATA   AGE
+hipster-possum.v1         1      3h4m
+oldfashioned-seagull.v1   1      9m23s
+yodeling-chimp.v1         1      7m10s
+```
+
+Where if one wants to check the data from specific CM following command can be used:
+
+```
+▶ helm get hipster-possum
+REVISION: 1
+RELEASED: Wed Apr 22 16:12:10 2020
+CHART: nginx-demo-0.1.0
+USER-SUPPLIED VALUES:
+{}
+...
+...
+```
+
+
+### Installing tiller
+
+
+create servicaccount user admin
+```
+k create sa admin --dry-run=client -o yaml > admin-sa.yaml
+```
+
+edit `admin-sa.yaml` to match
+```
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: null
+  name: tiller
+  namespace: kube-system
+```
+
+create clusterrolebinding for admin user
+```
+k create clusterrolebinding tiller-clusterbinding --clusterrole=cluster-admin --serviceaccount=kube-system:tiller --dry-run=client -o yaml > admin-rbac.yaml
+```
+
+edit `admin-rbac.yaml` to match
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  creationTimestamp: null
+  name: admin
+roleRef:
+  apiGroup: ""
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin
+  namespace: kube-system
+```
+
+instruct helm to use above sa user
+```
+helm init --service-account admin
+```
+
+```
+helm init --history-max 200 # default is 0 which means no limit
+helm version --short
+```
+
+Above command will install tiller svc,deploy and pod inside k8s as:
+```
+▶ k get all -A -l name=tiller
+NAMESPACE     NAME                                READY   STATUS    RESTARTS   AGE
+kube-system   pod/tiller-deploy-d47d5858d-gpkkg   1/1     Running   0          16m
+
+NAMESPACE     NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)     AGE
+kube-system   service/tiller-deploy   ClusterIP   10.105.179.113   <none>        44134/TCP   16m
+
+NAMESPACE     NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
+kube-system   deployment.apps/tiller-deploy   1/1     1            1           16m
+
+NAMESPACE     NAME                                      DESIRED   CURRENT   READY   AGE
+kube-system   replicaset.apps/tiller-deploy-d47d5858d   1         1         1       16m
+
+```
+
+### Installing tiller in specific namespace and using specific service account for rbac enabled k8s
+```
+helm init --service-account tiller --tiller-namespace lab
+```
+
+### Uninstalling tiller from k8s
+```
+helm reset
+```
+
+
+
+## Creating demo package
+```
+helm create nginx-demo
+```
+
+This will create demo folder structure with predefined image info and parameters.Content of the folder is
+```
+▶ tree -f nginx-demo/
+nginx-demo # folder name
+├── nginx-demo/charts
+├── ngins-demo/requirements.yaml # chart dependency if any
+├── nginx-demo/Chart.yaml # vars regarding chart or package
+├── nginx-demo/templates # folder for templates
+│   ├── nginx-demo/templates/deployment.yaml
+│   ├── nginx-demo/templates/_helpers.tpl # functions which are used via values to populate templates yaml files
+│   ├── nginx-demo/templates/ingress.yaml
+│   ├── nginx-demo/templates/NOTES.txt # used for howto and usefull info (ports,urls) or what to do next after deployment
+│   ├── nginx-demo/templates/serviceaccount.yaml
+│   ├── nginx-demo/templates/service.yaml
+│   └── nginx-demo/templates/tests
+│       └── nginx-demo/templates/tests/test-connection.yaml
+└── nginx-demo/values.yaml # used in templates
+```
+
+Installing this `nginx-demo` inside k8s is done via:
+```
+helm install nginx-demo
+```
+
+Where we can check its content and helm status via:
+```
+▶ helm list
+NAME          	REVISION	UPDATED                 	STATUS  	CHART           	APP VERSION	NAMESPACE
+hipster-possum	1       	Wed Apr 22 16:12:10 2020	DEPLOYED	nginx-demo-0.1.0	1.0        	default
+[mjv@devko] ~/dev/minikube
+▶ helm status hipster-possum
+LAST DEPLOYED: Wed Apr 22 16:12:10 2020
+NAMESPACE: default
+STATUS: DEPLOYED
+
+RESOURCES:
+==> v1/Deployment
+NAME                       READY  UP-TO-DATE  AVAILABLE  AGE
+hipster-possum-nginx-demo  1/1    1           1          9m40s
+
+==> v1/Pod(related)
+NAME                                        READY  STATUS   RESTARTS  AGE
+hipster-possum-nginx-demo-6988d9c968-swj2q  1/1    Running  0         9m39s
+
+==> v1/Service
+NAME                       TYPE       CLUSTER-IP     EXTERNAL-IP  PORT(S)  AGE
+hipster-possum-nginx-demo  ClusterIP  10.111.76.219  <none>       80/TCP   9m40s
+
+==> v1/ServiceAccount
+NAME                       SECRETS  AGE
+hipster-possum-nginx-demo  1        9m40s
+
+
+NOTES:
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=nginx-demo,app.kubernetes.io/instance=hipster-possum" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl port-forward $POD_NAME 8080:80
+```
+
+WARNING: Tiller comes with full permissions on k8s cluster.It is recommended to create service account and specify needed permissions for it (e.g. allow permissions for one namespace only)
+Also communication between helm and tiller is done via `gRPC` protocol which is not encrypted.This is solved in helm3 where tiller is not used at all.
+
+## Deleting package
+```
+helm delete ${package_name} [--purge]
+```
+
+`--purge` is used to remove CM of specific helm package
+
+## Helm concepts
+[%hardbreaks]
+`Chart` - is definition of the package
+`Release` - an instance of the Helm Chart in k8s.Multiple releases of same chart can be deployed inside the same k8s
+`Application version` - application depending on developments
+`Chart version` - version of the Helm defintion of the application
+`Release version` - an update of existing release
+
+[cols="1,1", options="header"]
+.Helm commands
+|===
+|Action
+|Commands
+
+|Install a Release
+|`helm install [chart]`
+
+|Upgrade a Release version
+|`helm upgrade [release] [chart]`
+
+|Rollback to a Release version
+|`helm rollback [release] [revision]`
+
+|Print Release history
+|`helm history [release]`
+
+|Display Release status
+|`helm status [release]`
+
+|Show details of a Release
+|`helm get [release]`
+
+|Uninstall Release
+|`helm delete [release]`
+
+|List Releases
+|`helm list`
+|===
+
+### Templates
+
+template
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .name }}
+```
+
+
+object definition(values.yaml)
+```
+type: NodePort
+name: myservice
+port: 80
+```
+
+manifest
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: myservice
+```
+
+Values from object definition ( values.yaml ) will be used with template files to generate k8s manifetsts.
+Templating is done on client side ( where helm clinet is installed ).
+
+#### Testing
+`static` - `helm template CHART [-x path/to/template_file]` - can be used to test whole template or specific template file
+`dynamic` - `helm install --dry-run --debug CHART` - testing before install
+
+#### Data
+Data values can be provided to the templates in several ways.
+
+##### Values data
+Values can be propagated via:
+* `values.yaml` - part of Chart folder structure.It contains k/v pairs which are used in combination with templates to create final manifests for k8s
+* `other_file.yaml` - used via `helm install -f other_file.yaml` to use specific value file instead Chart's one
+* `variables` - used via `helm install --set k=v` to provide values for some keys during helm install
+
+Accessing in templates is done via `{{ .Values.service.name }}` if content of values.yaml is
+```
+service:
+  name: mysvc
+```
+
+##### Chart data
+Accessing Chart data is done via `{{ .Chart.Name }}`
+
+##### Release data
+Accessing Release data is done via `{{ .Release.Name }}`.Other options are also supported.Check the docs for more info.
+
+##### Kubernetes data
+Accessing via `{{ .Capabilities.KubeVersion }}`.Other options are also supported.Check the docs for more info.
+
+##### File data
+Accessing via `{{ .Files.Get conf.ini }}` where `conf.ini` is file located in the root of the Chart.
+
+##### Template data
+Accessing via `{{ .Template.Name }}.Other options are also supported.Check the docs for more info.
+
+In case of parent and child charts,every child chart must have its own `Values.yaml` file.Also, parent chart can override subhilds `Values.yaml` files while oppossite is not possible.
+
+##### Global values
+Accessing via `{{ .Values.global.id }}`
+
+WARNING: templates doesn't support `-` thus when defining keys in `Values.yaml`.
+
+WARNING: `helm lint` can be used for final debugs.
+
+#### Functions and pipelines syntax
+Inside templates one can use functions or pipeline syntax for templating.Former is used for simple templates while latter is used when multiple actions is needed (similar to pipe in linux).
+
+.Functions vs pipeline syntax
+[%header,cols=2]
+|===
+|Functions |Pipeline
+
+|`quote value` |`value \| quote`
+|`toYaml value` |`value \| toYaml`
+|`printf format value` |`list value ... \| join "-"`
+
+|===
+
+with - used for ident several values with same parent key
+```
+{{ with .Values.server }}
+...
+{{ end }}
+```
+
+formating
+```
+{{- printf "%s-%s" .Release.Name .Values.server.name -}}
+```
+
+.operators
+|===
+|Operator |Function |Example
+
+|= |eq | eq .Val1 .Val2
+|!= |ne | ne .Val1 .Val2
+|> | gt | gt .Val1 .Val2
+|< | lt | lt .Val1 .Val2
+|logical or | or | or .Val1 .Val2
+|logical and | and | and .Val1 .Val2
+|logical not | not | not .Val1
+
+|===
+
+flow control
+```
+{{- if .Values.server.name -}}
+{{ .Values.server.name | trimSuffix "-" }}
+{{- else -}}
+{{ .Chart.Name }}
+{{- end -}}
+```
+
+range
+```
+{{- range .list }}
+...
+{{- end -}}
+```
+
+WARNING: one cannot use `.Values` inside `with` and `range`.Instead one must use `definition`
+
+define variable for `with` and `range` blocks
+```
+{{ $defvar := .Val1 }}
+{{ with ... }}
+a: {{ $defvar }}
+{{ end }}
+```
+
+real example
+```
+{{- range $currentHost := .Values.ingress.hosts }}
+  - host: {{ hostname | quote }}
+    http:
+      paths:
+      {{- range .paths }}
+        - path: {{ .path }}-{{ $currentHost.suffix }}
+      backend:
+        serviceName: $.Release.Name ## using global variable
+      {{ end }}
+{{- end }}
+```
+
+### _helpers.tpl
+List of template functions.
+
+defining
+```
+{{- define "mychart.fullname" }}
+...
+{{- end -}}
+```
+
+accessing
+```
+{{ include "mychar.fullname" . }}
+```
+
+WARNING: in case with subcharts and parent charts keep in mind that template functions names must be uniqe (e.g. `"mysubchart.filename"`)!
+
+### NOTES.txt
+This is also a template and it is used for adding more info,howto to the chart.
+
+### Requirements.yaml
+This file should be in the root of the Chart and only applies on helm2.In helm3 it is removed and its contents is integrated in Chart.yaml.
+It contains info about information on which your chart depends.
+
+Here is an example:
+```
+▶ cat guestbook/requirements.yaml
+dependencies:
+  # name of the chart
+  - name: backend
+  # version of the chart
+    version: ~0.1.0
+  # location of the chart
+    repository: http://127.0.0.1:8879/charts
+  # condition settings based on which is determined if the chart will be installed during `helm install`
+    #condition: backend.enabled,global.backend.enabled
+  # same as condition with and exception that tags can be overriden by condition params
+    tags:
+      - api
+  - name: frontend
+    version: ^1.1.0
+    repository: http://127.0.0.1:8879/charts
+  - name: mongodb
+    version: 6.1.x
+    repository: https://kubernetes-charts.storage.googleapis.com
+    condition: mongodb.enabled
+    tags:
+      - api
+```
+
+WARNING: conditions and tags are evaluated only during `helm install`.Tags are used only in case where conditions are not used.
+If tags and conditions are used,conditions has more preference.
+
+## Managing dependencies
+
+### Packaging a chart
+
+Manual
+```
+tar -zcvf chart_name_version.tgz chart_name
+```
+
+Automatic and recommended.In addition it will add tgz file in `~/.helm/repository/local` folder.
+```
+helm package chart_name
+```
+
+### Repos
+[%hardbreaks]
+Helm is looking for charts in following locations:
+`local` - http://127.0.0.1:8879/charts
+`stable` - https://kubernetes-charts.storage.googleapis.com
+`custom` - if there is some
+
+#### Managing repos
+[%hardbreaks]
+`helm repo add myrepo URL` - adding helm repo
+`helm repo remove myrepo` - removing helm repo
+`helm repo list` - list helm repos
+`helm search CHART` - search for chart in repo
+`helm inspect [chart,values,readme] chart_name` - show more info on chart regarding readme and values which can be used
+`helm fetch chart_name` - download chart from repo to current folder
+
+#### Updating dependency of the chart
+[%hardbreaks]
+`helm dependency update mychart` - update mychart folder structure based on contents of `requirements.yaml`
+`helm dependency list mychart` - check dependencies
+`helm dependency build mychart` - update mychart folder structure based on contents of `requirements.lock`
+
+# References
+[%hardbreaks]
+http://technosophos.com/2017/03/23/how-helm-uses-configmaps-to-store-data.html
+https://kubernetes.io/docs/setup/learning-environment/minikube/
+https://helm.sh/

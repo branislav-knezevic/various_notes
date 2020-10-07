@@ -1,0 +1,290 @@
+# Kubernetes commands:
+
+kubectl get pod|service|namespace...
+kubectl --v=8 logs gtv-sonar-sonarqube-d6645fcf9-j8c6w --namespace=dev-tools
+kubectl describe pod <pod_name> 
+kubectl describe deployment <deployment_name> 
+kubectl get pod <pod_name> -o yaml --namespace=dev-tools # get output of a pod in yaml file
+kubectl drain <nod_name> # remove one or more nodes  e.g. if that node needs to be taken down for maintenance
+  --ignore-daemonsets # can be added to ignore the system pods such as proxy or network
+kubectl uncordon <nod_name> # put node back in service
+kubectl delete node <nod_name>
+kubectl -n integration get all -l 'app.kubernetes.io/name in (apigateway)' # get resources based on label search query
+sudo kubeadm token generate # generate a new token when new node needs to be joined
+sudo kubeadm token create <token_from_previous_command> # generetes a link which needs to be ran on worker nodes 
+  # if needed copy output of this command to some text editor to remove line breaks
+
+  ## backing up k8s cluster 
+
+# Done with ETCD cli
+sudo ETCDCTL_API=3 etcdctl snapshot save <snapshot_name.db> --cacert <path> --cert <path> --key <path>
+etcdctl --write-out=table snapshot status <snapshot_name.db>
+# both db snapshot and certificates used for creating it need to be backed up
+        
+        
+        
+        --- Kubernetes ---
+	
+Borg --> Omega --> Kubernetes, aka K8s
+An orchestartor for microservices which run in containers
+Runs on Linux
+Cluster elements
+	Master 
+		usually one master
+		doesn''t run any services, nodes do that
+		kube-apiserver # brains of the cluster
+			front-end to the control plane
+			exposes API
+			consumes JSON via manifest file
+		cluster store # memory of the cluster
+			persistent storage
+			state and config
+			uses etcd # open soruce distributed key-value store, NoSQL DB
+		kube-controller-manager
+			controller of controllers
+				node controller
+				endopoints controllers
+				namespace controller
+				...
+			help maintain desired state of the cluster
+		kube-scheduler
+			watches apiserver for new pods
+			assigns work to workers
+				affinity/anti-affinity
+				constraints
+				resources
+				...
+	Nodes aka Minions
+		Kublet
+			the main kubernetes agent on the node
+			registers node with cluster
+			watches apiserver
+			reports back to master
+			exposes endpoint on :10255
+		Container Engines
+			does container management
+				pulling images
+				starting/stopping containers
+				...
+			Pluggable
+				usually docker
+				can be rkt
+		kube-proxy
+			kubernetes networking
+				Pod IP address # all containers in a pod share a single IP
+				Load balances accross all pods in a service
+	Pods
+		Atomic unit for K8s # same as container for Docker
+		Containers are ran within pods
+		Pod can have multiple containers
+			if that is the case they share same memory, IP, IPC, volumes
+			containers within one Pod communicate over localhost network
+		Pods communicate over pod network (like overlay network)
+		Unit of scaling in K8s - scale up by adding pods, not containers within a pod
+		May have main and sidecar container within a pod # main = app, sidecar = logscraper (logging agent)
+		Never brought back to life # if it stops working it is replaced, not fixed
+		manifest file --> apiserver --> Pending --> Running --> Succeeded
+			May go to Failed state # it gets replaced then
+		Single Pod = Single Node
+		Usually deployed as part of a deployment, but may be deployed via manifest file
+		They may be deployed via replication controllers as well
+		Pod deployment is done only after ALL containers within it are successfully deployed
+	Services
+		Labels are used to tie services with belonging pods
+		Services only send traffic to healthy pods
+		can be configured for session affinity/anti-affinity
+		can point to things outside the cluster
+		random load balancing 
+		uses TCP by default
+		When service is created Endpoint object is created with it. 
+		Endpoint contains a list of all active pods and it is dynamically updated
+		Service discovery
+			DNS based (best)
+			Environment variables
+		Service types
+			CluserIP # stable internal cluster IP - makes service available only within a cluster
+			NodePort # exposes the app outside of the cluster by adding a cluster-wide port on top of ClusterIP
+			LoadBalancer # integrates NodePort with cloud-based load balancers
+			
+	Deployments
+		Declare desired state
+		Self documenting
+		spec-once deploy many
+		Versioned
+		simple rolling updates and rollbacks
+			multiple concurrent versions # blue green deployments
+			simple versioned rollbacks
+		via YAML or JSON manifest
+		deployed via the apiserver
+		Replica sets - add features to replication controllers
+	
+	
+--------------------------------------------------------------------------
+	
+	-- Practical: --
+	
+	https://medium.com/@JockDaRock/minikube-on-windows-10-with-hyper-v-6ef0f4dc158c # minikube with hyperv
+	
+kubectl get nodes # shows working nodes
+minikube start/stop/delete # cluster commands
+
+kubeadm init # initializes creating of a cluster
+kubectl get nodes # list of all available nodes
+kubectl get pods --all-namespaces
+kubectl apply --filename https://git.io/weave-kube-1.6 # installs network from that file
+
+manifest file:
+apiVersion: v1 # stable version
+kind: Pod # type
+metadata:
+  name: hello-pod
+spec: # which containers are going to run on this Pod
+  containers:
+  - name: hello-ctr
+    image: nigelpoulton/pluralsight-docker-ci:latest
+    ports:
+    - containerPort: 8080
+#end of file	
+
+kubectl create -f pod.yml # deploy pod
+kubectl get pods
+kubectl describe pods
+kubectl get pods/[pod-name] # info for specific pod
+kubectl get pods --all-namespaces # info for all pods
+
+manifest file:
+apiVersion: v1 #this is for replica controller
+kind: ReplicationController
+metadata:
+  name: hello-rc
+spec:
+  replicas: 10
+  selector:
+    app: hello-world
+  template: # from this it specifies pod configuration
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+      - name: hello-ctr
+        image: nigelpoulton/pluralsight-docker-ci:latest
+        ports:
+        - containerPort: 8080
+#end of file
+if any changes need to be applied manifest file is edited
+kubectl apply -f [manifest-file.yml]
+
+kubectl expose rc hello-rc --name=hello-svc --target-port=8080 --type=NodePort # create service
+	rc # ReplicationController type
+	hello-rc # name of rc
+	--name=hello-svc # name of service
+	--target-port=8080 # which port should service use
+kubectl descrive svc [service-name] # describe service
+	--type=NodePort # service type
+
+manifest file:
+apiVersion: v1
+kind: Service # specify type
+metadata:
+  name: hello-svc
+  labels:
+    app: hello-world
+spec:
+  type: NodePort # specify service type
+  ports:
+  - port: 8080 # internal port
+    nodePort: 30001 # external port
+    protocol: TCP
+  selector:
+    app: hello-world # which app to use
+#end of file
+
+kubectl get ep # show endpoints
+kubectl describe ep <service-name> # describe specific endpoint (name is the same as the service)
+
+manifest file:
+apiVersion: extensions/v1beta1 # must be stated, v1 is the current version
+kind: Deployment # specify type 
+metadata:
+  name: hello-deploy
+spec:
+  replicas: 10
+  minReadySeconds: 10 # how many seconds to wait after pod is alive until it deploys the next one
+  strategy:
+    type: RollingUpdate
+	rollingUpdate:
+	  maxUnavailable: 1 # one pod at-a-time
+	  maxSurge: 1 # never create 1 above replica number of pods (10 in this case)
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+      - name: hello-pod
+        image: nigelpoulton/pluralsight-docker-ci:latest
+        ports:
+        - containerPort: 8080
+#end of file		
+		
+kubectl run -f <deploy-file.yml> # initiate deployment
+kubectl apply -f <deploy-file.yml> --record # apply changes to deployment
+	--record # used so it would appear later when history is shown
+kubectl rollout status deployment <name-of-deployment> # rollout status
+kubectl get deploy <name-of-deployment> # info about deployment
+kubectl rollout history deployment <name-of-deployment> # shows history and versions
+kubectl rollout undo deployment <name-of-deployment> --to-revision=1 # rollback deployment
+	--to-revision=1 # from the history table
+
+-----------------------------
+
+kubectl run <deployment_name> --image=<docker_image> --replicas=<number>
+	kubectl run http --image=java:8 --replacas=2
+	kubectl get deployments
+	kubectl scale --replacas=5 deployment <deployment_name>
+kubectl run <deployment_name> --image<docker_image> --replacas=<number> --port=<port_number> --hostport=<port_number>
+	--port # is a port which is set in Docker image
+	--hostport # is a port on which that pod will be available externally
+kubectl get nodes
+			deployment/deployments
+			rc
+			svc/services/service
+			pods
+			
+---------------------------------
+
+	-- Networking --
+	
+Node Network
+	Flat Routed Network
+		Network pool is determined eg. 192.168.x.x
+		Each node internally gets an ip range from that pool, eg Node1 gets 192.168.10.0/24, Node2 gets 192.168.20.0/24...
+		Each Pod gets one IP from a pool of addresses for each Node
+		Each node has different IP for communication between other nodes, router and the network itself 
+		Requires static IP table on the router
+		Router will need to have a proper IP table which directs proper NodeNetwork IPs to Nodes
+	Overlay
+		Also Nodes have their own IP ranges, but there is an overlay (tunnel) between nodes
+		ETCD key value store provides this communication
+Communication 
+	Done via Kubernetes services
+		ClusterIP
+			Endpoints # gives a listing of pods
+			Ports # which ports should be exposed
+		NodePort
+			Endpoints # gives a listing of pods
+			Ports # which ports should be exposed, can be mapped to any port, allows external communication
+		
+		
+	
+When running kubernetes on CentOS8, there might be an issue with `kube-proxy` which is manifested by log:
+```
+Failed to execute iptables-restore: exit status 2 (iptables-restore v1.6.0: Couldn't load target `KUBE-MARK-DROP':No such file or directory
+```
+This is resolved by ediiting IPTables of that kube-proxy pod:
+```
+ksys exec -i kube-proxy-ks2nt -- /bin/sh -c "iptables -t nat -N KUBE-MARK-DROP;iptables -t nat -A KUBE-MARK-DROP -j MARK --set-xmark 0x8000/0x8000"
+```
+
+	
