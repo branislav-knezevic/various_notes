@@ -22,7 +22,7 @@ Routes which are disabled are marked with *****X** at the beggining
 
 ```
 18 X  ;;; Exchange 2010SP1 multy-tenant
-      chain=dstnat action=dst-nat to-addresses=192.168.88.243 protocol=tcp dst-address=37.220.108.85 in-interface=WAN log=no log-prefix=""
+chain=dstnat action=dst-nat to-addresses=192.168.88.243 protocol=tcp dst-address=37.220.108.85 in-interface=WAN log=no log-prefix=""
 ```  
 
 Command `export` shows the list of created rules  

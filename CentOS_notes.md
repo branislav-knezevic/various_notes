@@ -138,9 +138,10 @@ iptables
 			:OUTPUT ACCEPT [0:0]
 			COMMIT
 		run iptables-restore < clear-all-rules
-Meld # investigate, sometihg to compare files
+`meld`  needs to be installed, compare two files
 /boot/grub/grub.cfg # data about the installed kernels
-uname -r # current kernels
+`uname -r ` current kernels
+`uname -a ` system info
 sudo apt-get autoremove # remove old downloaded unused kernels
 clusterssh # ssh to multiple hosts at once
 sudo fdisk -l # list all partitions

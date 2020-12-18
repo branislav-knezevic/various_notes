@@ -1,16 +1,16 @@
-Ansible Notes
+# Ansible Notes
 
-# Ansible general
+## Ansible general
 
-ansible-doc # internal documentation
-ansible-doc -l # list of all available modules, may be outputed into a file with > <file_name>
-ansible-doc ec2 # help for a specific module
-/etc/ansible # default ansible instalation dir, contains examples of ansible.cfg and hosts file.
-    # this ansible.cfg file is usefull ans it contains a lot of examplas of things which can be configured in this file
+`ansible-doc` internal documentation
+`ansible-doc -l` list of all available modules, may be outputed into a file with > <file_name>
+`ansible-doc ec2` help for a specific module
+`/etc/ansible` default ansible instalation dir, contains examples of ansible.cfg and hosts file.
+ this ansible.cfg file is usefull ans it contains a lot of examplas of things which can be configured in this file
 
 
 
-# Ansible commands
+## Ansible commands
 
 all are ran as ansilble ...
 --list-hosts all # list all hosts in ansible hosts file
@@ -30,35 +30,35 @@ all are ran as ansilble ...
 		ansible -i <custom_hosts_file> --list-hosts all
 	# location of hosts file can be changed in /etc/ansible/ansible.cfg, inventory line
 	# or new ansible.cfg file with custom values can be created and ansible can be run from the same directory where this file is
--m ping all # ping all hosts, -m is for module
--m command -a "hostname" all # send hostname command to all hosts
-# -m command is a default
--a "hostname" all # would do the same thing
-"on docs.ansible.com" list of all modules
-ansible -m setup <host_name> # it executes just gathering facts step
-ansible-playbook database.yml -e db_name=myapp... # variable passed via command line
-ansible-vault create <vault_filename> # do this within a folder where you want it
-ansible-vault edit <vault_filename> # to change the content after it has been saved
-# then point the unencrypted variable to the encyrpted one
-# when running a playbok which contains a encrypted pass
-ansible-playbook --ask-vault-pass
-# or store this pass in a file outside of a folders which are pushed to a repo as plain text
-# this can be done each time via command line
-ansible-playbook --vault-password-file <path_to_file>
-# or better put it into ansible.cfg as
-vault_password_file = <path_to_file>
-ansible-playbook site.yml --limit app01 # limits a specific host but applies all rules from site.yml
-# each task or role can be tagged
-ansible-playbook site.yml --tags "<tag_name>" # executes only tasks which are marked with that tag
-ansible-playbook site.yml --skip-tags "<tag_name>" # same thing to skip ceertain tasks
-# it helps to mark all steps which install packeges to be skipped, speeds things up
+`-m ping all` ping all hosts, -m is for module
+`-m command -a "hostname" all` send hostname command to all hosts
+`-m` command is a default
+`-a "hostname" all` would do the same thing
+`"on docs.ansible.com"` list of all modules
+`ansible -m setup <host_name>` it executes just gathering facts step
+`ansible-playbook database.yml -e db_name=myapp...` variable passed via command line
+`ansible-vault create <vault_filename>` do this within a folder where you want it
+`ansible-vault edit <vault_filename>` to change the content after it has been saved
+then point the unencrypted variable to the encyrpted one
+when running a playbok which contains a encrypted pass
+`ansible-playbook --ask-vault-pass`
+or store this pass in a file outside of a folders which are pushed to a repo as plain text
+this can be done each time via command line
+`ansible-playbook --vault-password-file <path_to_file>`
+or better put it into ansible.cfg as
+`vault_password_file = <path_to_file>`
+`ansible-playbook site.yml --limit app01` limits a specific host but applies all rules from site.yml
+each task or role can be tagged
+`ansible-playbook site.yml --tags "<tag_name>"` executes only tasks which are marked with that tag
+`ansible-playbook site.yml --skip-tags "<tag_name>"` same thing to skip ceertain tasks
+it helps to mark all steps which install packeges to be skipped, speeds things up
 
-ansible-playbook site.yml --step # asks for each step should it be executed
-ansible-playbook site.yml --list-tasks # shows all tasks
-ansible-playbook site.yml --start-at-task "<task_name>"
-ansible-playbook site.yml --limit @/path_to_file.retry # retries only failed hosts
-ansible-playbook --syntax-check site.yml # just checks syntax
-ansible-playbook --check site.yml # dry run, preview of things that will be done
+`ansible-playbook site.yml --step` asks for each step should it be executed
+`ansible-playbook site.yml --list-tasks` shows all tasks
+`ansible-playbook site.yml --start-at-task "<task_name>"` start specific task
+`ansible-playbook site.yml --limit @/path_to_file.retry` retries only failed hosts
+`ansible-playbook --syntax-check site.yml` just checks syntax
+`ansible-playbook --check site.yml` dry run, preview of things that will be done
 
 
 
@@ -66,29 +66,30 @@ ansible-playbook --check site.yml # dry run, preview of things that will be done
 
 saved as .yml file
 simple playbook:
-	<beginning> # without this
-	---
-	  - hosts: all # on which hosts to execute
-	    tasks: # which commands
-	      - name: get server hostname # optional name of this step
-	        command: hostname # which bash command to execute
-	<end> # without this
-ansible-playbook <path_to_playbook_yml> # run a specific playbook
-# whan playbook is ran, there are three steps
-	GATHERING FACTS # gathering basic info about hosts and returning it to playbook
-	TASK # executing specified commands
-	PLAY RECAP # summary of executed commands
+```
+---
+  - hosts: all # on which hosts to execute
+    tasks: # which commands
+      - name: get server hostname # optional name of this step
+	command: hostname # which bash command to execute
+```
+`ansible-playbook <path_to_playbook_yml>` run a specific playbook
+whan playbook is ran, there are three steps
+`GATHERING FACTS` gathering basic info about hosts and returning it to playbook
+`TASK` executing specified commands
+`PLAY RECAP` summary of executed commands
+
 4 pillars for most linux apps
-	1. required packages # download deb...
-	2. service handler/tracker # upstart nnd, systemd... tracking service status
-	3. system configuration # required files, dirs, users, permissions, iptables...
-	4. config files for the app
+  1. required packages # download deb...
+  2. service handler/tracker # upstart nnd, systemd... tracking service status
+  3. system configuration # required files, dirs, users, permissions, iptables...
+  4. config files for the app
 
 
+### playbooks from lecture 
 
-### playbooks from lecture ###
-
-<beginning> "loadbalancer" # without this
+loadbalancer
+```
 ---
 - hosts: loadbalancer
   become: true # run tasks as sudo
@@ -143,10 +144,9 @@ ansible-playbook <path_to_playbook_yml> # run a specific playbook
   handlers:
     - name: restart nginx
       service: name=nginx state=restarted
-
-<end> # without this
-
-<beginning> "database"
+```
+database
+```
 ---
 - hosts: database
   become: true
@@ -178,9 +178,10 @@ ansible-playbook <path_to_playbook_yml> # run a specific playbook
   handlers:
     - name: restart mysql
       service: name=mysql state=restarted
-<end>
+```
 
-<beginning> "webserver"
+webserver
+```
 ---
 - hosts: webserver
   become: true
@@ -237,9 +238,10 @@ ansible-playbook <path_to_playbook_yml> # run a specific playbook
     - name: restart apache2
       service: name=apache2 state=restarted
       # this handler doesnt automatically restart the service, it needs a trigger
-<end>
+```
 
-<beginning> "control"
+control
+```
 ---
 - hosts: control
   become: true
@@ -249,9 +251,10 @@ ansible-playbook <path_to_playbook_yml> # run a specific playbook
       with_items:
         - curl
         - python-httplib2
-<end>
+```
 
-<beginning> "stack restart"
+stack restart
+```
 ---
 # bring stack down
 - hosts: loadbalancer
@@ -287,9 +290,10 @@ ansible-playbook <path_to_playbook_yml> # run a specific playbook
   tasks:
     - service: name=apache2 state:started
     - wait_for: port=3306
-<end>
+```
 
-<beginning> "service-status-check"
+service-status-check
+```
 ---
 - hosts: loadbalancer
   become: true
@@ -364,14 +368,15 @@ ansible-playbook <path_to_playbook_yml> # run a specific playbook
     - fail: msg="db failed to return content"
       when: "'Database Connected from' not in item.content"
       with_items: "{{app_db.results}}"
-<end>
+```
 
-### same thing done with roles ###
 
-# create roles folder and then within that folder run
-ansible-galaxy init <role_name> # creates basic structure for each role
-# for each role copy the tasks into tasks/main.yml
-# eg for control file would look like
+### same thing done with roles 
+
+create roles folder and then within that folder run
+`ansible-galaxy init <role_name>`  creates basic structure for each role
+for each role copy the tasks into `tasks/main.yml`
+eg for control file would look like
 role structure:
 ```
 roles/apache2
@@ -387,39 +392,45 @@ roles/apache2
 └── vars
     └── main.yml # another place where variables can be placed
 ```
-<beginning>
+
+```
 - name: install tools
   apt: name={{item}} state=present update_cache=yes
   with_items:
     - curl
     - python-httplib2
-<end>
-# then tasks in original file are replaced with role
-<beginning> "control"
+```
+then tasks in original file are replaced with role
+
+control
+```
 ---
 - hosts: control
   become: true
   roles:
     - control
-<end>
-# database example
-<beginning> database
+```
+database example
+```
 ---
 - hosts: database
   become: true
   roles:
     - mysql # there is no need to specify anything for the handlers, only to set it in roles/name/handlaers/main.yml
-<end>
-# when template is being used, it is saved as a file in roles/templates and path to it in configuration is just set as src=<filename>
-# files should be copied into files folder
 
-<beginning> # used to reference other playbooks so then shouldn't need to be applied individually
+```
+when template is being used, it is saved as a file in roles/templates and path to it in configuration is just set as `src=<filename>`
+files should be copied into files folder
+
+used to reference other playbooks so then shouldn't need to be applied individually
+
+```
 ---
 - include: control.yml
 - include: database.yml
 - include: webserver.yml
 - include: loadbalancer.yml
-<end>
+```
 
 ## Using facts / dynamic variables
 
@@ -669,4 +680,4 @@ In order to use ansible with specific instances run
   ansible -i ec2.py tag_Environment_Staging -m ping
 
 In order to use it with ansible-playbook
-  ansible-playbook -i ec2.py --limit tag_Environment_Staging playbook.yml
+ ansible-playbook -i ec2.py --limit tag_Environment_Staging playbook.yml

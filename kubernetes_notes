@@ -12,6 +12,8 @@ kubectl delete node <nod_name>
 kubectl -n integration get all -l 'app.kubernetes.io/name in (apigateway)' # get resources based on label search query
 sudo kubeadm token generate # generate a new token when new node needs to be joined
 sudo kubeadm token create <token_from_previous_command> # generetes a link which needs to be ran on worker nodes 
+`kas set image deployment.v1.apps/<deployment_name> <name_of_desired_container_in_a_pod>=<image_name> --record=true` revert to previous version of an image
+`kas set image deployment.v1.apps/staging-ci-kaseya-devtech ci-kaseya-devtech=devtechregistry.azurecr.io/acronis-kaseya-integration/ci-kaseya:71-local --record=true` revert to previous version of an image
   # if needed copy output of this command to some text editor to remove line breaks
 
   ## backing up k8s cluster 

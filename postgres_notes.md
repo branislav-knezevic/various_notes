@@ -13,14 +13,15 @@
 `\l` list databases
 `\c <db_name>` connect to desired db
 `\dn` list schemas
-`CREATE DATABSE <db_name>;`
-`DROP DATABSE <db_name>;`
+`CREATE DATABASE <db_name>;`
+`DROP DATABASE <db_name>;`
 
 #### Tables
 
 `\dt` list tables in current db
 `\dt+` more info about tables in current db
 `\d+ <table_name>` more info about specific table
+`DROP TABLE <table_name>` delete specific table
 
 #### Users
 
@@ -29,7 +30,8 @@ depending on how you setup the role. A role that has login right is called user.
 roles, which are known as groups.
 `\du` list users
 `CREATE ROLE <role_name>` create role
-`CREATE ROLE <username> NOINHERIT LOGIN PASSWORD <password>` create role with credentials
+`CREATE ROLE <username> NOINHERIT LOGIN PASSWORD '<password>';` create role with credentials. Password must be in single
+quotes
 `SET ROLE <role_name>` change role for the current session. User will then have privilages only set for that role
 `RESET ROLE` restores the original role
 `GRANT <role_name> TO <role_name>` allow role 1 to set its role as role 2

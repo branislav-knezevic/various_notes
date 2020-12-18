@@ -255,6 +255,18 @@ after YAML file is updated, command docker stack create -c [yaml-file] [stack-na
 	
 ------------------------------------------------------------------------------------------------------
 
+## docker-compose
+
+Yaml file, contains full config for one or multiple docker containers 
+File should be named `docker-compose.yml` (or `yaml`)
+`docker-compose up` starts all containers which are defined within a file. Needs to be triggered from the directory
+where `docker-compse.yml` file is located
+`docker-compose -f <path_to_file>` if config file is located else where
+`docker-compse -d up` will start all services in detached mode, otherwise it will show logs and current terminal will be
+locked by it
+`docker-compse -d <service_name>` starts specific service from the config file
+`docker-compose stop <service_name>` stops specific service from the config file
+`docker-compose down` stops and shuts down all services
 
 			
 
