@@ -60,18 +60,28 @@ All commands work as a word + noun (dw = delete word)
 `g` at the end of the command means it applies to the whole document
 `v` means an NOT to match the given pattern
 
+## Control commands
+
+### Normal Mode 
+
 `ctrl + ]` jump to a definition of a tag
 `ctrl + g]` will show all the occurencies of this defined tag 
 `ctrl + t` jump back up the tag stack
 `ctrl + n` autocompletes a word, n is for next
 `ctrl + p` autocompletes a word, p is for previous
-`ctrl + x ctrl + n` autocomplete but with words only within this file
-`ctrl + x ctrl + f` autocompletes file names, great when path needs to be added to vim file
-`ctrl + x ctrl + ]` autocompletes a tag 
 `ctrl + w + s` split window horizontally
 `ctrl + w + v` split window vertical
 `ctrl + w + q` remove split
 `ctrl + w + w` move to next window
+
+### Insert Mode
+
+`ctrl + x ctrl + n` autocomplete but with words only within this file
+`ctrl + x ctrl + f` fzf complete path
+`ctrl + x ctrl + k` fzf complete word (from whole dictionary)
+`ctrl + x ctrl + j` fzf complete file with Ag (silver-searcher)
+`ctrl + x ctrl + l` fzf complete line
+`ctrl + x ctrl + ]` autocompletes a tag 
 
 ### Buffers
 
@@ -109,4 +119,114 @@ Buffers are used when more that one files are open within the same Vim
 `zM` close all folds
 `zv` expand folds to reveal coursor
 
---- checkout theme groove-box ---
+### FZF
+`:FZF` starts a regular fuzzyfinder  
+`:Files` searches for files in current git dir and shows preview
+`:Rg` initiates ripgrep search, searches also for phrases within files
+`:Ag` initiates silverSearcher, simlar to ripgrep
+`:Blines` something like find (`/` ) in vim but it will show lines where it found it and you can jumb to that line
+`:Lines` does search in all opened buffers
+`:History:` command history
+`:Buffers` serach opened buffers
+
+## Leader shortcuts
+
+### Normal mode
+
+`-` split horizontal
+`q` quit
+`q!` quit without saving
+`w` save
+`e` FZF 
+`r` FZF buffers
+`t` FZF git files (shows all git files)
+`y` NERDTree find
+`u`
+`i`
+`o`
+`p`
+`[`
+`]`
+`a`
+`s` FZF git modified files
+`d`
+`f`
+`g` FZF ripgrep
+`h` move to left split
+`j` move to lower split
+`k` move to upper split
+`l` move to right split
+`;`
+`'`
+`\` split vertical
+`z`
+`x` save and close
+`c`
+`v` toggle paste
+`b`
+`n` NERDTree open
+`m`
+`,` save
+`.` switch between current and last buffer
+`<space>` clear whitespace at the end of the line
+
+### Insert mode
+
+`-`
+`q` quit current file
+`q!` quit current file without saving
+`w` save current file
+`e`
+`r` 
+`t`
+`y`
+`u`
+`i`
+`o`
+`p`
+`[`
+`]`
+`a`
+`s`
+`d`
+`f`
+`g`
+`h`
+`j`
+`jk` go to normal mode
+`k`
+`l`
+`;`
+`'`
+`\`
+`z`
+`x` save and exit
+`c`
+`v`
+`b`
+`n`
+`m`
+`,`
+`.`
+`<space>` 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

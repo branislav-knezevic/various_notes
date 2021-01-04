@@ -1,0 +1,48 @@
+# Notes regarding Vagrand and Odin environemnts
+
+ne vezano za ovo - za linux konekciju probati No Machine
+
+hosting is not used any more / rarely
+billing is the most important part
+
+machines:
+  manager
+  billing
+  billing_db
+  billing_store
+  proxy
+  gateway/ui
+
+Procedure:
+spin 6 machines from awx
+templates, 
+provision  VM, 
+start 6 machines / each one needs to be strated individually
+in inventory add new inventory, add hosts
+run template to add users to desired inventory
+
+once management machine is up and running
+run update
+log on to management node and add other nodes
+
+
+once logged in
+informatin - licenses add license
+modules
+add billing module
+This needs to be checked in tasks - here it will show status of this job
+infrastructure - service nodes - add machines
+When installing new node add backnet ip with root credentials
+license must be added to the billing node as wel
+order to add
+1. db
+2. applicaton
+3. online store
+4. ui
+5. endpoint
+
+Networking
+All machines have two networks - frontNet and backNet
+Default `eth0` network must be deleted, that must be done directly via VirtualBox, not `ssh`
+Commands for this are in the guide
+
