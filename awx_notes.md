@@ -28,3 +28,9 @@ set inventory as above
 go to templates - `after provisioning windows`, add proper inventory
 Use `workflow - provison Windows VM`
 
+## Removing machines
+
+### Removing OSA
+
+From template, select job `Remove OSA Sandbox`, launch it and on the next screen select prefix and host where the
+sandbox is located

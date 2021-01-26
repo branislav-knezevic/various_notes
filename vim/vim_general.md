@@ -2,31 +2,67 @@
 YouTube:
     Matering the Vim Language
     How to do 90% of What Plugins do (with just vim)
+    vim + tmux - OMG!Code https://www.youtube.com/watch?v=5r6yzFEXajQ&t=813s
 
-# Normal mode
+## Normal mode
 
 All commands work as a word + noun (dw = delete word)
 
-## Words:
+### Text objects
+
+`w` words    
+`s` sentances
+`p` paragraphs  
+`t` tags (available in XML/HTML files)
+`i` indents (requires a plugin)
+`l` lines (requires a plugin)
+`e` entire (requires a plugin)
+
+### Motions
+
+`w` word forward
+`b` word backward
+`e` end of the word
+`i` inner (selects just the word)
+`a` all (selects word but also spaces/brackets if they exist)
+`f_` find - go to first appearance of character _ in that line
+`F_` same thing but backwards
+`t_` till - go to a character before the first appearance of character _ in that line
+`T_` same thing but backwards
+`{/}` beginning/end of a paragraph
+
+### Commands:
 `d` delete
 `D` delete till the end of a line
 `c` change (delete + insert)
 `C` change till the end of a line
+`I` move to beggining of the line and insert
+`A` move to end of the line and insert
+`o` insert below current line
+`O` insert above current line
+`p` paste below current line
+`P` paste above current line
 `>` indenti (works with hjkl operators)
 `<` outdent 
 `v` visually select
 `V` visuall select lines
 `y` yank/copy
 `Y` yank whole line
+`~` replace case upper --> lower
+`r` replace character with what you type in
 
-## Nouns:
-`w` word forward
-`b` word backward
-`2j` jump 2 ammount of lines
-`f_` go to first appearance of character _ in that line
-`F_` same thing but backwards
-`t_` go to a character before the first appearance of character _ in that line
-`T_` same thing but backwards
+### Macros
+
+`q<register>` start recortding
+(do the things)
+`q` stop recording
+`@<register>`  apply the macro
+`2@<register>` apply the macro to two lines below
+Different way to apply to multiple lines
+`V+j/k` to select desired lines
+`:normal @<register` applies that macro to those lines
+
+### Nouns:
 `/` search for any character, word
 `?` same thing but backwards
 `m` set mark, eg. mq sets q mark on place where the cursor is
@@ -41,12 +77,11 @@ All commands work as a word + noun (dw = delete word)
 `d'q` delete everyting until the marker q
  same operations work with c, v, y
 `daw|"|]` same as diw but with a it captures also the space that follows i
-`~` replace case upper --> lower
 `gUw` change whole word to uppecrase
 `guw` change whole word to lowercase
 `gUU` whole line uppercase
 
-## Registers
+### Registers
 `"` used to name a registry
 `"cyy` yank whole line to registry named "c"
 `"cp` paste from "c" registry
@@ -57,6 +92,7 @@ All commands work as a word + noun (dw = delete word)
 `:ls` lists all files which are currently opened in vim
 `:b <part_of_the_filename>` opens that file if it is already opened in vim
 `:echo expand(%)` get the name of the currently opened file
+`:reg` shows all registers, good place to paste stuff from
 `g` at the end of the command means it applies to the whole document
 `v` means an NOT to match the given pattern
 
@@ -64,6 +100,12 @@ All commands work as a word + noun (dw = delete word)
 
 ### Normal Mode 
 
+`ctrl + y` few lines up
+`ctrl + e` few lines down
+`ctrl + u` half page up
+`ctrl + d` half page down
+`ctrl + f` full page up
+`ctrl + b` full page down
 `ctrl + ]` jump to a definition of a tag
 `ctrl + g]` will show all the occurencies of this defined tag 
 `ctrl + t` jump back up the tag stack
@@ -92,141 +134,6 @@ Buffers are used when more that one files are open within the same Vim
 `:b<number>` go to specific buffer
 `:b#` go to previous active buffer
 `:bd` close current buffer
-
-## Plugin commands
-
-### surround plugin
-`ysiwX` surround word with X (.,[]{} whatever)
-`cs"'` replace surrunding " with ' if text is already surrounded
-`dsX` delete exisitng X surrundings
-
-### comment plugin
-`gcc` comment out a line
-`gc2j` comment N number of lines below
-`gcgc` uncomment adjacent commented lines
-
-### vim-system-copy
-`cpiw` copy word to system plugin
-`cpi'` copy content inside of '' to system plugin
-`cvi'` paste content of system clipboard inside of ''
-
-### vim folding
-
-`zi` switch folding on or off
-`za` toggle current fold open/closed
-`zc` close current fold
-`zR` open all folds
-`zM` close all folds
-`zv` expand folds to reveal coursor
-
-### FZF
-`:FZF` starts a regular fuzzyfinder  
-`:Files` searches for files in current git dir and shows preview
-`:Rg` initiates ripgrep search, searches also for phrases within files
-`:Ag` initiates silverSearcher, simlar to ripgrep
-`:Blines` something like find (`/` ) in vim but it will show lines where it found it and you can jumb to that line
-`:Lines` does search in all opened buffers
-`:History:` command history
-`:Buffers` serach opened buffers
-
-## Leader shortcuts
-
-### Normal mode
-
-`-` split horizontal
-`q` quit
-`q!` quit without saving
-`w` save
-`e` FZF 
-`r` FZF buffers
-`t` FZF git files (shows all git files)
-`y` NERDTree find
-`u`
-`i`
-`o`
-`p`
-`[`
-`]`
-`a`
-`s` FZF git modified files
-`d`
-`f`
-`g` FZF ripgrep
-`h` move to left split
-`j` move to lower split
-`k` move to upper split
-`l` move to right split
-`;`
-`'`
-`\` split vertical
-`z`
-`x` save and close
-`c`
-`v` toggle paste
-`b`
-`n` NERDTree open
-`m`
-`,` save
-`.` switch between current and last buffer
-`<space>` clear whitespace at the end of the line
-
-### Insert mode
-
-`-`
-`q` quit current file
-`q!` quit current file without saving
-`w` save current file
-`e`
-`r` 
-`t`
-`y`
-`u`
-`i`
-`o`
-`p`
-`[`
-`]`
-`a`
-`s`
-`d`
-`f`
-`g`
-`h`
-`j`
-`jk` go to normal mode
-`k`
-`l`
-`;`
-`'`
-`\`
-`z`
-`x` save and exit
-`c`
-`v`
-`b`
-`n`
-`m`
-`,`
-`.`
-`<space>` 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+`sp #<number>` open buffer in horizontal split
+`vsp #<number>` open buffer in vertical split
 
