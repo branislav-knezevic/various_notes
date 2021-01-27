@@ -30,6 +30,18 @@ Other option:
 `git commit --amend -m "<new_message>"` updating last commit message
 `git commit --amend` gives an option to edit a message but also includes any files added to staging
 `git clean -df` removes any untracked files
+`git clean -n` shows list of files which will be removed
+
+## Stashing
+
+`git stash` saves the file locally
+`git stash save "<comment>"` saves with a comment
+`git stash list` shows stashed files
+`git stash apply stash@{0}` goes to that stashed file (  `stash@{0}` is received from stash list )
+`git stash drop stash@{0}` removes that file from the stash
+`git stash pop` grabs the first stash from the list, applys those changes and removes that stash
+`git stash clear` removes all files from stash
+
 
 ## Cherrypicking
 
@@ -52,5 +64,6 @@ status`
 
 ## Branches
 
+`git branch <branch_name>`create branch
 `git branch -D <branch_name>` delete local branch  
 `git push origin --delete <branch_name>` delete remote branch
