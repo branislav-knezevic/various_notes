@@ -3,9 +3,9 @@
 ### Insert mode
 
 `-`
-`q` quit current file
-`q!` quit current file without saving
-`w` save current file
+`q` 
+`q!`
+`w`
 `e`
 `r` 
 `t`
@@ -30,7 +30,7 @@
 `'`
 `\`
 `z`
-`x` save and exit
+`x`
 `c`
 `v`
 `b`

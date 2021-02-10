@@ -1,41 +1,78 @@
-Linux notes
+# Linux notes
 
-who # shows who is logged on to the computer
-echo $SSH_CONNETION - checks computer connection
-tty # shows which terminal console is used
-option from putty to duplicate connection and might be usefull
-w # some basic OS info (up time, logged on users...)
-logout/exit/ctrl+d # all the same thing
-echo [variable name] # shows the value of the variable
-chsh -s [path to the shell] # sets that shell as default
-ufw allow [port number] # lets certain port through firewall UBUNTU
-ip addr # check IP on CENTOS
-![command] # runs the last command assigned, !gre will run last grep command (if it was ran previously)
-!?[key word] # runs last command which contains this keyword (command, part of the path...)
-!$ # represents the last argument, ll /etc/www will list files and cd!$ will enter the same folder
-history # shows all commands which have been ran
-ctrl+r # searches the command history, esc to edit, enter to run
+## Markdown formated
 
-cat [file path] # like a read only command for files
-tac [file path] # same as cat just from end to start
-cat /etc/shells # lists the available shells
-cat -vet [file path] # shows the file with hidden characters
-dos2unix [file path] # converts file to unix, removing any hidden characters
-tail -f [file path] # keeps the log file opened and updates it. good for usage if services are restarted in a new window
-cut -f[column1],[column2] -d"[separator]" [file path] # to show only certain columns
-	cut -f1,3 -d":" /etc/file1.csv
-sort -k[column1] -t"[separator]" [file path] # to sort by certain column
-	sort -k4 -t":" /etc file1.csv
+`rsync` used to copy files via ssh between multiple systems
+`rsync -zarvh <user>@<ip>:<path_to_file_on_remote> <path_on_local>`
+eg:  
+`rsync -zarvh branislav-knezevic@192.168.87.34:/tmp/privkey3.pem /tmp`
 
-cp [file path] [file path] # copying file from current location to the new one. If second name is different but the path is same as the source, then it will create same file with different name
-mv [file path] [file path] # move file, if both path are same and name is different, it will then rename the file
-cp|mv|ll|ls -R # recursive copy/move/list of files
-mkdir # create directory
-	mkrid -p folder1/folder2 # creates both folders (f2 within f1)
-rm # delete file
-rmdir # remove folder
-cd # without any arguments goes to home directory
-ls # list directory
+`ssh-keygen` to generate a ssh keypair
+`ssh-keygen -t rsa -b 4096 -C "bknezevic"`
+
+`ln` creating links from file to file
+`ln file1 file2` creates a normal links
+`ln -s file1 file2` creates a symbolic link
+eg:
+`sudo ln -s ~/Projects/Private/scripts/ec2_info.sh  /usr/bin/ec2_info`
+
+### General
+
+`who` shows who is logged on to the computer
+`tty` shows which terminal console is used
+`w` some basic OS info (up time, logged on users...)
+`logout/exit/ctrl+d` all the same thing
+`echo $VARIABLE_NAME` shows the value of the variable
+`chsh -s <path_to_shell>` sets that shell as default
+`ufw allow <port_number>` lets certain port through firewall UBUNTU
+`ip addr` check IP on CENTOS
+`![command]` runs the last command assigned, !gre will run last grep command (if it was ran previously)
+`!?[key word]` runs last command which contains this keyword (command, part of the path...)
+`!$` represents the last argument, ll /etc/www will list files and cd!$ will enter the same folder
+`history` shows all commands which have been ran
+`ctrl+r` searches the command history, esc to edit, enter to run
+
+### Viewing files
+
+`cat [file path]` like a read only command for files
+`tac [file path]` same as cat just from end to start
+`cat /etc/shells` lists the available shells
+`cat -vet [file path]` shows the file with hidden characters
+`dos2unix [file path]` converts file to unix, removing any hidden characters
+`tail -f [file path]` keeps the log file opened and updates it. good for usage if services are restarted in a new window
+`cut -f[column1],[column2] -d"[separator]" [file path]` to show only certain columns
+eg:
+`cut -f1,3 -d":" /etc/file1.csv`
+
+`sort -k[column1] -t"[separator]" [file path]` to sort by certain column
+eg:
+`sort -k4 -t":" /etc file1.csv`
+`less` reading file from end to beginning
+`/<word>` searches for that word forwards
+`?<word>` searches backward
+
+`head -n <number>` how many lines to show
+`tail -n <number>` how many lines to show
+`tail -f` live update, good for logs
+`diff <file1> <file2>` comparing two files
+`meld <file1> <file2>` better choice for file comparisment, needs to be installed
+`stat <file name>` shows statistic about the file, access, modify...
+
+### File/directory manipulation
+
+`cp [file path] [file path]` copying file from current location to the new one. If second name is different but the path is same as the source, then it will create same file with different name
+`mv [file path] [file path]` move file, if both path are same and name is different, it will then rename the file
+`cp|mv|ll|ls -R` recursive copy/move/list of files
+`mkdir` create directory
+`mkdir -p` can create multiple directories within 
+eg: 
+`mkrid -p folder1/folder2` creates both folders (f2 within f1)
+`rm` delete file
+`rmdir` remove folder
+`cd` without any arguments goes to home directory
+`ls` list directory
+File and folder permissions: 
+```
 drwxr-xr-x. 4 root root 44 May 13 05:25 folder1.1
 	d # type of the file - directory in this case
 	rwx # permissions for root user (as root is mentioned after number 4)
@@ -47,59 +84,46 @@ drwxr-xr-x. 4 root root 44 May 13 05:25 folder1.1
 	44 #
 	May 13 05:25 # date/dime modified
 	folder1.1 # file/folder name
-ll -lr # list files and sort by time modified
-ll -lrt # reverse listing
-ln # creating links from file to file
-	ln file1 file2 # creates a normal links
-	ln -s file1 file2 # creates a symbolic link
-dd # for imaging disk
-rsync -av [source folder] [destination folder] # used to backup with maintained permissions
-tar -cvf [file path/name.tar] [source folder] # to archive/zip files -c create, -v verbose, -f to which file
-tar -cvzf # same as above, just uses gZip which zips files more
-tar -tf [file path] # views the content of the tar archive. -z can be added if it is gZip
-du -sh [folder path] # check size of folder
-time [command] # measures the time it takes for command to execute
-touch [file path/file name] # creates empty file or used to changed modified time for existing file
-find [criteria] -exec [command] # executes specified command on all results of the find command
-	find /usr/share -maxdepth 3 -name '*.pdf' -exec ls -lh {} \; # find all files in /usr/share which are three folders down and have a .pdf extension, show ls -lh properties for each of them
-	find /usr/share -maxdepth 3 -size +138K # return all files three levels down from /usr/share which are bigger than 138K
+```
+`ll -lr` list files and sort by time modified
+`ll -lrt` reverse listing
+`dd` for imaging disk
+`tar -cvf [file path/name.tar] [source folder]` to archive/zip files -c create, -v verbose, -f to which file
+`tar -cvzf` same as above, just uses gZip which zips files more
+`tar -tf [file path]` views the content of the tar archive. -z can be added if it is gZip
+`du -sh [folder path]` check size of folder
+`time [command]` measures the time it takes for command to execute
+`touch [file path/file name]` creates empty file or used to changed modified time for existing file
+`find [criteria] -exec [command]` executes specified command on all results of the find command
+ eg: 
+`find /usr/share -maxdepth 3 -name '*.pdf' -exec ls -lh {} \;` find all files in /usr/share which are three folders down and have a .pdf extension, show ls -lh properties for each of them
+`find /usr/share -maxdepth 3 -size +138K` return all files three levels down from /usr/share which are bigger than 138K
 
-ls [folder path] 1> [file path/file name] # ls is just a example command, this will store the output of this command in specified file. Number 1 is optional in this case
-ls [folder path] 1>> [file path/file name] # same as above, just appends to the file, doesn't create a new one
-ls [folder path] 2> [file path/file name] # this will record only errors
-ls [folder path] 1> [file path/file name] 2>&1 # this will record both info and error in the same file
-set -o # shows some options for the shell, noclobber is point of interest at this moment
-set -o noclobber # this changes state from off to on for this command. This will turn on protection from overwritting the file. This works only during this session. Permamently it can be set by using login scripts
-df -h # "disk free" displays the free disk space
-du -h # "disk usage"
-which [name of the application] # shows the path to home folder of this application
-	which logstash
-	/usr/share/logstash # is the output
-tee # uses to output result both to command line and the file
-	ll /etc | tee /temp/somefile # will show the content of /etc folder on the screen but also save it in the /temp/somefile file
-find <where> -name <what>
-  find <where> -name <what> -exec <cp, mv...> {} <where> \; # do something with results from find
-  -maxdepth <number> # how many directories to search in depth
-  -size +<number>k # size in kb
-    find /boot -size +20000k
-locate <filename> # same as find, but faster
-	# run sudo updatedb first and each time before search
-	# some paths are excluded, like /tmp - list is in /etc/updatedb.conf
-less # reading file from end to beginning
-  /word # searches for that word forwards
-  ?word # searches backward
-
-head
-  -n <number> # how many lines to show
-tail
-  -n <number> # how many lines to show
-  -f # live update, good for logs
-diff <file1> <file2> # comparing two files
-stat <file name> # shows statistic about the file, access, modify...
+`ls [folder path] 1> [file path/file name]` ls is just a example command, this will store the output of this command in specified file. Number 1 is optional in this case
+`ls [folder path] 1>> [file path/file name]` same as above, just appends to the file, doesn't create a new one
+`ls [folder path] 2> [file path/file name]` this will record only errors
+`ls [folder path] 1> [file path/file name] 2>&1` this will record both info and error in the same file
+`set -o` shows some options for the shell, noclobber is point of interest at this moment
+`set -o noclobber` this changes state from off to on for this command. This will turn on protection from overwritting the file. This works only during this session. Permamently it can be set by using login scripts
+`df -h` "disk free" displays the free disk space
+`du -h` "disk usage"
+`which <app_name>` shows the path to home folder of this application
+`tee` uses to output result both to command line and the file
+eg:
+`ll /etc | tee /temp/somefile` will show the content of /etc folder on the screen but also save it in the /temp/somefile file
+`find <where> -name <what>` locate any file on disk
+`  find <where> -name <what> -exec <cp, mv...> {} <where> \;` do something with results from find
+`  -maxdepth <number>` how many directories to search in depth
+`  -size +<number>k` size in kb
+eg:
+`find /boot -size +20000k`
+`locate <filename>` same as find, but faster
+`sudo updatedb` run first and each time before search
+some paths are excluded, like /tmp - list is in /etc/updatedb.conf
 
 
 
---- processes ----
+### Proceesses
 
 uptime # shows uptime of the computer and load average data
 	# 1/5/15 minutes - should be less than number of cores on the machine
@@ -275,3 +299,5 @@ System layout
 	|---share # things that might be common to multiple systems
 |---var # various. variable
 	|---log # has all system logs in it
+```
+

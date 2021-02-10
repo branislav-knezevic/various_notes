@@ -36,7 +36,11 @@
 
 `<leader>e` files edited in git
 `<leader>b` files opened in buffer
+`<leader>t` search for open tabs
 `<leader>f` serch for files in current tree
+  `<tab>` to select multiple files
+  `<ctrl>v` open selected file in vertial split
+  `<ctrl>t` open selected file in new tab
 `<leader>g` ripgrep in files (searches for phrases withing files)
 
 in insert mode:  

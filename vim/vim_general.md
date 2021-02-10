@@ -137,3 +137,10 @@ Buffers are used when more that one files are open within the same Vim
 `sp #<number>` open buffer in horizontal split
 `vsp #<number>` open buffer in vertical split
 
+### Autocomplete
+
+`ctrl + e` cancel autocomplete menu
+`ctrl + j` move down in autocomplete menu
+`ctrl + k` move up in autocomplete menu
+`ctrl + l` select option from autocomplete menu
+`tab` select option from autocomplete menu
