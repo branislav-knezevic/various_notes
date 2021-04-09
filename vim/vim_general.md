@@ -106,6 +106,8 @@ Different way to apply to multiple lines
 `ctrl + d` half page down
 `ctrl + f` full page up
 `ctrl + b` full page down
+`ctrl + a` when on integer, it will increment it
+`ctrl + x` when on integer, it will decrement it
 `ctrl + ]` jump to a definition of a tag
 `ctrl + g]` will show all the occurencies of this defined tag 
 `ctrl + t` jump back up the tag stack

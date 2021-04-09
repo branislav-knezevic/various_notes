@@ -64,3 +64,5 @@ Bash scripting
 	}
 
 set -e # setting this at the beggining will make the script to exit on error
+
+`read <variable_name>` prompts user for input and sets that text as that variable

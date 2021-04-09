@@ -40,8 +40,10 @@
 `<leader>f` serch for files in current tree
   `<tab>` to select multiple files
   `<ctrl>v` open selected file in vertial split
+  `<ctrl>x` open selected file in horizontal split
   `<ctrl>t` open selected file in new tab
 `<leader>g` ripgrep in files (searches for phrases withing files)
+
 
 in insert mode:  
 `<ctrl>x<ctrl>k` find words (from dictionary)
@@ -58,7 +60,7 @@ in insert mode:
 
 ### Easymotion
 
-`<leader>m` prefix for plugin, can be used with `w` `e` `b` `j` `k`...
+`<leader>z` prefix for plugin, can be used with `w` `e` `b` `j` `k`...
 `s<character>` searches for <character> anywhere in the document and highligts  it
 `ss<character><character>` searches for <character><character> anywhere in the document and highligts them
 
@@ -71,4 +73,13 @@ in insert mode:
 ### Nerdtree
 
 `<leader>n` toggle NerdTree
-`<leader>z` go to NerdTree
+`<leader>a` go to NerdTree
+
+### Auto-pairs
+
+`<alt>p` toggle plugin
+`<alt>e` when in insert mode to surround next word or words (if they are already surrounded) in desired things
+`"|"{some text}` when in insert mode on position `|`, `<alt>e` will surround `{some text}` with quotes
+pressing `<alt>e` multiple times will include next word each time
+`<alt>b` when you FlyMode is enabled to insert a closed bracket where needed
+`<alt>n` finds next closing paranthasis

@@ -98,6 +98,8 @@ drwxr-xr-x. 4 root root 44 May 13 05:25 folder1.1
  eg: 
 `find /usr/share -maxdepth 3 -name '*.pdf' -exec ls -lh {} \;` find all files in /usr/share which are three folders down and have a .pdf extension, show ls -lh properties for each of them
 `find /usr/share -maxdepth 3 -size +138K` return all files three levels down from /usr/share which are bigger than 138K
+`find . -name "<file_name>" -type f -delete` locate all files with specific name recursively from current dir and delete them
+`find . -name "<dir_name>" -type d -exec rm -rf {} +` locate all directories with specific name recursively from current dir and delete them 
 
 `ls [folder path] 1> [file path/file name]` ls is just a example command, this will store the output of this command in specified file. Number 1 is optional in this case
 `ls [folder path] 1>> [file path/file name]` same as above, just appends to the file, doesn't create a new one
@@ -111,16 +113,21 @@ drwxr-xr-x. 4 root root 44 May 13 05:25 folder1.1
 `tee` uses to output result both to command line and the file
 eg:
 `ll /etc | tee /temp/somefile` will show the content of /etc folder on the screen but also save it in the /temp/somefile file
+
 `find <where> -name <what>` locate any file on disk
 `  find <where> -name <what> -exec <cp, mv...> {} <where> \;` do something with results from find
 `  -maxdepth <number>` how many directories to search in depth
 `  -size +<number>k` size in kb
 eg:
 `find /boot -size +20000k`
+
 `locate <filename>` same as find, but faster
 `sudo updatedb` run first and each time before search
 some paths are excluded, like /tmp - list is in /etc/updatedb.conf
 
+`sed` searching, find and replace, insertion or deletion
+eg.
+`sed 's/<word1>/<word2>/g' <source_file> > <destination_file>` searches for `<word1>` in `<source_file>` replaces it with `<word2>` and outputs the result into `<destination_file>`
 
 
 ### Proceesses

@@ -13,6 +13,52 @@ All queries can be set to have a result as key:value pairs
 `--query 'Versions[].{Key: Key,VersionId: VersionId }'` this is an example from the s3api list-object-versions output
 `aws ec2 describe-regions --output text | cut -f 3` the easiest way to get the third column of the output
 
+## Filtering
+
+when using `--filter` paramenter make sure to properly set the names (words devided by dashes `group-name` instad of CamelCase `GroupName`), syntax is as follows:
+```
+aws ec2 describe-security-groups --filters "Name=group-name,Values=default"
+```
+although in the `describe-security-groups` CamelCase is used for name `GroupName`
+```
+{
+    "SecurityGroups": [
+        {
+            "Description": "default VPC security group",
+            "GroupName": "default",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "-1",
+                    "IpRanges": [],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": [],
+                    "UserIdGroupPairs": [
+                        {
+                            "GroupId": "sg-011f6d8089205f89d",
+                            "UserId": "992929034856"
+                        }
+                    ]
+                }
+            ],
+            "OwnerId": "992929034856",
+            "GroupId": "sg-011f6d8089205f89d",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "-1",
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": [],
+                    "UserIdGroupPairs": []
+                }
+            ],
+            "VpcId": "vpc-0386050207ee198d2"
+        },
+```
+
 
 # EC2
 

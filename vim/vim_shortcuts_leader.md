@@ -20,14 +20,14 @@
 `r` reload vim configuration
 `t` FZF find tab
 `y`
-`u`
+`u` 
 `i`
 `o`
 `p`
 `[`
 `]`
-`a` go to previous file in buffer
-`s` go to next file in buffer
+`a` NERDTree find
+`s` 
 `d` FZF git files (shows all git files)
 `f` FZF 
 `g` FZF ripgrep
@@ -38,13 +38,13 @@
 `;`
 `'`
 `\` split vertical
-`z` NERDTree find
+`z` EasyMotion plugin prefix
 `x` save and close
 `c`
 `v` toggle paste
 `b` FZF buffers
 `n` NERDTree open
-`m` easymotion prefix
+`m` new tab
 `,` save
 `.` switch between current and last buffer
 `<space>` clear whitespace at the end of the line
