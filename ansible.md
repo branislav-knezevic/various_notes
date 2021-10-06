@@ -59,6 +59,8 @@ it helps to mark all steps which install packeges to be skipped, speeds things u
 `ansible-playbook site.yml --limit @/path_to_file.retry` retries only failed hosts
 `ansible-playbook --syntax-check site.yml` just checks syntax
 `ansible-playbook --check site.yml` dry run, preview of things that will be done
+Structure:
+role defines a list of tasks which need to be done on a specific target e.g. create user and add him to the proper groups
 
 
 

@@ -1,3 +1,48 @@
+# # Resource types
+
+Deployment
+  has description of the service, pod and replica set
+  updating by default is done via rolling update, new RS is crated and until it is 100% healthy the previous one is not deleted
+  Used mostly for stateless applications
+  for data persistance, all pods have a PVC which all connect to the same PV
+StatefullSet
+  used for statefull applications, 
+  doesn't create replica set 
+  each Pod would have it's own PVC and PV
+  can't be rolled back to a previous version
+  usefull for databases
+DaemonSet
+  ensures that a pod runs on every node of the cluster
+  usually for monitoring, logging (fluentd)
+Job
+  manages a task until it completes and then kills the pod on which it was ran on.
+  doesn't have a desired state like a usual Pod
+CronJob
+  Job with a time based scheduling
+
+LivenessProbe
+  to determine when kublet should restart a container
+  is application dead or alive
+ReadinessProbe
+  when pod is ready to accept traffic - when all of its containers are ready
+StartupProbe
+  to delay liveness and readiness check and give time to a application/container to start
+
+# architecture
+
+## master node
+  
+  API Server
+    entrypoint to the cluster
+  Controller Manager
+    overview of the cluster
+  Scheduler
+    scheduling containers based on workload
+  ETCD
+    key value store, 
+    status data 
+
+
 # Kubernetes commands:
 
 kubectl get pod|service|namespace...

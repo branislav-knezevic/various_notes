@@ -1,0 +1,40 @@
+# OSI model - 7 layers of networking
+
+7. Application layer
+  closest to the user, the actual application which user is using to interact with the network
+  Firefox, Chrome, Outlook...
+6. Presentation layer
+  Operating System
+  Device drivers
+5. Session layer
+  Communication between two computers
+  session from user comp to webserver
+  E.g. user can cat to the server but something in the backgourd stops working
+4. Transport layer
+  How much info should be sent
+  transport of the data back and forth
+3. Network layer
+  Routers operate on this layer
+  IP addresses
+2. Data Link layer
+  Switches operate on this layer
+  MAC addresses
+1. Physical layer
+  Physical stuff that connects computers 
+  pathes, cabling...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

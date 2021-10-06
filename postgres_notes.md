@@ -13,6 +13,7 @@
 `\l` list databases
 `\c <db_name>` connect to desired db
 `\dn` list schemas
+`\conninfo` info about current connection, user, password... 
 `CREATE DATABASE <db_name>;`
 `DROP DATABASE <db_name>;`
 
