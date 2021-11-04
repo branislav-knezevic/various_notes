@@ -30,6 +30,7 @@ All commands work as a word + noun (dw = delete word)
 `t_` till - go to a character before the first appearance of character _ in that line
 `T_` same thing but backwards
 `{/}` beginning/end of a paragraph
+`''` go to previous location
 
 ### Commands:
 `d` delete
@@ -82,9 +83,23 @@ Different way to apply to multiple lines
 `gUU` whole line uppercase
 
 ### Registers
+
+`:registers` or `:reg`shows the list of things in registry - basically clipboard
+- `c` character text
+- `l` line text
+- `b` block text
+`""` the unnamed register - everything that goes to clipboard ends here
+
+#### Named Registers
+
 `"` used to name a registry
 `"cyy` yank whole line to registry named "c"
 `"cp` paste from "c" registry
+
+### Marks
+
+`ma` sets mark "a" to the coursor position
+`'a` jumps to position of mark "a"
 
 ## Commands:
 `:find <file_name>` finds a file name in the current directory
@@ -106,6 +121,8 @@ Different way to apply to multiple lines
 `ctrl + d` half page down
 `ctrl + f` full page up
 `ctrl + b` full page down
+`ctrl + o` got to previous jump (list jumps with `:jumps` )
+`ctrl + i` got to next jump
 `ctrl + a` when on integer, it will increment it
 `ctrl + x` when on integer, it will decrement it
 `ctrl + ]` jump to a definition of a tag

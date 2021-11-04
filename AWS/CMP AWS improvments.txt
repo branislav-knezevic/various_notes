@@ -1,0 +1,49 @@
+CMP improvments on AWS
+
+RDS - set production for multi-AZ
+	- set event subscriptions for monitoring
+	- free storage space alarm
+	- maybe MySql alternative???
+IAM - set roles for users
+	- add martin for MFA
+	- organize users in OUs # read somwhere, can't find it now :(
+	- Create CrossAccount access
+CloudWatch 	- adjust repeting periods for alarms
+			- set warrnings
+			- create billing alarms
+			- instance state alarams
+S3  - archiving
+    - cross region replication
+VPC - NACL # deny everything appart from http from all other addresses, allow all to devtech and UKDC IP
+	- delete extra SGs
+	- cross account access 
+	- public and private subnet
+		only webserver in public
+		all other servers in private
+EC2 - reserved instances
+	- implemet ELB and AutoScaling
+		autoscaling for webserver - min one, max one with script to create AMI during each deploy
+		every service to be behind a loadbalancer and an autoscaling group - desired state 1 for the begginnig but that could change in the future
+	- using spot instances as workers for cost saving # probably not a good idea
+	- security groups when creating workers - use one and don''t create new ones each time
+	- Mongo on Linux machine
+	- if .netCore is used all apart from the webserver can be on Linux
+    - use more tags, environment, role...
+    - alternative - use microservices and containerize everything	
+Route 53 - Endpoint health check for Webserver
+		 - two hosted zones, one internal and one external
+		 - every loadbalancer or ip to be sorted in hosted zones
+SQS - Long Polling vs Short Polling
+	- messages larger than 256 KB can be managed using the S3 or DynamoDB, with  SQS holding a pointer to the S3 object
+	- use sequence numbers in messages
+Resource Groups - Create tags and resource groups
+possibly use a combination of terraform and some other tool (ansible, chef or puppet) for the whole infrastructure.
+	those servers can be hosted in UKDC
+CloudFormation
+	1. create network diagram
+	2. create appropriate SGs
+	3. create template
+		instances - function if Webserver - than t2.small
+							 if WCF - than t2.micro...
+		role needs to be added 
+		'dependsOn' attribute for sg of mongo
