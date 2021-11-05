@@ -51,6 +51,9 @@ All commands work as a word + noun (dw = delete word)
 `Y` yank whole line
 `~` replace case upper --> lower
 `r` replace character with what you type in
+`J` add next line of the end of the current one
+`*` search for word under the coursor
+
 
 ### Macros
 
@@ -163,3 +166,7 @@ Buffers are used when more that one files are open within the same Vim
 `ctrl + k` move up in autocomplete menu
 `ctrl + l` select option from autocomplete menu
 `tab` select option from autocomplete menu
+
+## :Commands
+
+`:!<command>` any shell command can be executed like this

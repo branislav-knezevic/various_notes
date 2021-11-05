@@ -12,7 +12,8 @@
 `8`
 `9`
 `0`
-`-` split horizontal
+`-` resize split down
+`=` resize split up
 `q` quit
 `q!` quit without saving
 `w` save
@@ -32,8 +33,8 @@
 `f` FZF 
 `g` FZF ripgrep
 `h` resize split left
-`j` resize split down
-`k` resize split up
+`j` move current line down
+`k` move current line up
 `l` resize split right
 `;`
 `'`
