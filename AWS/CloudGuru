@@ -846,7 +846,7 @@ Elasticache
 
 Aurora
 	Charecteristics
-		MySQL compatible
+		MySQL and PostgreSQL compatible
 		5 times better performance than MySQL
 		Starts with 10GB, scales in 10GB increments up to 64 TB
 		2 copies of data in each AZ = min of 6 copies of data # just storage - not Aurora instance

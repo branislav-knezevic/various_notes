@@ -29,15 +29,25 @@ All commands work as a word + noun (dw = delete word)
 `F_` same thing but backwards
 `t_` till - go to a character before the first appearance of character _ in that line
 `T_` same thing but backwards
-`{/}` beginning/end of a paragraph
+`;` to jump to the next occurance, works with both `f` and `t`
+`,` to jump to the previous occurance works with both `F` and `T`
+`{` beginning of a paragraph
+`}` end of a paragraph
+`%` go to other (opening or closing) brackets
 `''` go to previous location
+`:<line_number` go to specific line number or `<line_number>g`
 
 ### Commands:
 `d` delete
+`dd` delete whole line
 `D` delete till the end of a line
+`S` delete entire line and go to insert mode, `cc` would do the same
 `c` change (delete + insert)
+`cc` change whole line and go to insert mode 
 `C` change till the end of a line
+`i` go to insert mode
 `I` move to beggining of the line and insert
+`a` go to insert after the current character
 `A` move to end of the line and insert
 `o` insert below current line
 `O` insert above current line
@@ -48,11 +58,15 @@ All commands work as a word + noun (dw = delete word)
 `v` visually select
 `V` visuall select lines
 `y` yank/copy
-`Y` yank whole line
+`Y` yank whole line (changed to yany till the end of the line)
+`yy` yank whole line
 `~` replace case upper --> lower
 `r` replace character with what you type in
 `J` add next line of the end of the current one
-`*` search for word under the coursor
+`*` search for word under the coursor forward
+  for next occurance use `*` again or `n`
+`#` search for word under the coursor backwards
+  for previous occurance use `#` again or `N`
 
 
 ### Macros
@@ -103,6 +117,8 @@ Different way to apply to multiple lines
 
 `ma` sets mark "a" to the coursor position
 `'a` jumps to position of mark "a"
+`mA` sets mark "a" to the coursor position but it is valid for the whole buffer
+`'A` jumps to position of mark "A"
 
 ## Commands:
 `:find <file_name>` finds a file name in the current directory
@@ -133,10 +149,20 @@ Different way to apply to multiple lines
 `ctrl + t` jump back up the tag stack
 `ctrl + n` autocompletes a word, n is for next
 `ctrl + p` autocompletes a word, p is for previous
+
+#### Window operations
+
+`ctrl + w + <something>` window operations
 `ctrl + w + s` split window horizontally
 `ctrl + w + v` split window vertical
+`ctrl + w + H` switch from vertical to horizontal split
 `ctrl + w + q` remove split
 `ctrl + w + w` move to next window
+`ctrl + w + o` closes all buffers except the active one
+`ctrl + w + =` spread all splits evenly
+`ctrl + w + r` rotate/swap current buffers
+`:resize <number>` resize window horizontally
+`:vertical resize <number>` resize window vertically
 
 ### Insert Mode
 
