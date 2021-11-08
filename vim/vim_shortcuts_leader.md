@@ -28,10 +28,10 @@
 `[`
 `]`
 `a` NERDTree find
-`s` 
+`s` FZF ripgrep
 `d` FZF git files (shows all git files)
 `f` FZF 
-`g` FZF ripgrep
+`g` git status
 `h` resize split left
 `j` move current line down
 `k` move current line up

@@ -42,7 +42,7 @@
   `<ctrl>v` open selected file in vertial split
   `<ctrl>x` open selected file in horizontal split
   `<ctrl>t` open selected file in new tab
-`<leader>g` ripgrep in files (searches for phrases withing files)
+`<leader>s` ripgrep in files (searches for phrases withing files)
 
 
 in insert mode:  
@@ -54,9 +54,20 @@ in insert mode:
 ### Fugitive
 
 `:G<git_command>` use git within vim
+`<leader>gs` git status - same as `:G`
+`<leader>gp` git push
+`<leader>gl` git pull
+`<leader>gh` take left side from merge
+`<leader>g;` take right side from merge
+  `s` when on a file to set it to staging 
+  `u` when on a file to set it to unstage 
+  `=` show changes
+  `X` chooses only these changes in conflict mode (staged are local changes)
+  `dv` go to resolve conflict mode
 `:Gblame` shows who made changes on that file
-`o` once in `Gblame` will show which changes were made with specific commit
+  `o` once in `Gblame` will show which changes were made with specific commit
 `:Glog` git log history
+
 
 ### Easymotion
 

@@ -6,7 +6,7 @@ YouTube:
 
 ## Normal mode
 
-All commands work as a word + noun (dw = delete word)
+All nesto work as a word + noun (dw = delete word)
 
 ### Text objects
 
@@ -134,6 +134,7 @@ Different way to apply to multiple lines
 
 ### Normal Mode 
 
+`ctrl + c` similar like in the shell, breaks the current workflow
 `ctrl + y` few lines up
 `ctrl + e` few lines down
 `ctrl + u` half page up
