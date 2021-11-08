@@ -62,8 +62,9 @@ in insert mode:
   `s` when on a file to set it to staging 
   `u` when on a file to set it to unstage 
   `=` show changes
-  `X` chooses only these changes in conflict mode (staged are local changes)
+  `X` discards selected changes in conflict mode (unstaged are local changes)
   `dv` go to resolve conflict mode
+  `<any_number>gI` adds selected file to .gitgnore
 `:Gblame` shows who made changes on that file
   `o` once in `Gblame` will show which changes were made with specific commit
 `:Glog` git log history
