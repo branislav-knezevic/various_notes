@@ -61,8 +61,9 @@ in insert mode:
 `<leader>g;` take right side from merge
   `s` when on a file to set it to staging 
   `u` when on a file to set it to unstage 
+  `-` toggle these two above
   `=` show changes
-  `X` discards selected changes in conflict mode (unstaged are local changes)
+  `X` discards selected changes on files or in conflict mode (unstaged are local changes)
   `dv` go to resolve conflict mode
   `<any_number>gI` adds selected file to .gitgnore
 `:Gblame` shows who made changes on that file
