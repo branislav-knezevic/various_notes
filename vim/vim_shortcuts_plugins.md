@@ -62,6 +62,7 @@ in insert mode:
   `s` when on a file to set it to staging 
   `u` when on a file to set it to unstage 
   `-` toggle these two above
+  `-` once commit has been completed, can be used to push changes
   `=` show changes
   `X` discards selected changes on files or in conflict mode (unstaged are local changes)
   `dv` go to resolve conflict mode
