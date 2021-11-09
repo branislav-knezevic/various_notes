@@ -4,6 +4,7 @@
 `ysiwX` surround word with X (.,[]{} whatever)
 `cs"'` replace surrunding " with ' if text is already surrounded
 `dsX` delete exisitng X surrundings
+`ysiwt` will bring up tag at the bottom of the screen to enter a desired tag
 
 ### comment plugin
 `gcc` comment out a line
@@ -83,6 +84,7 @@ in insert mode:
 `[/]<space>` insert blank line before/after current line
 `[/]n` go to previous/next git conflict marker
 `[/]f` open to previous/next file in same directory
+`[/]e` move current line up/down
 
 ### Nerdtree
 
@@ -91,9 +93,11 @@ in insert mode:
 
 ### Auto-pairs
 
+`<alt>` may not work in many terminals
+
 `<alt>p` toggle plugin
-`<alt>e` when in insert mode to surround next word or words (if they are already surrounded) in desired things
-`"|"{some text}` when in insert mode on position `|`, `<alt>e` will surround `{some text}` with quotes
-pressing `<alt>e` multiple times will include next word each time
+`<ctrl>e` when in insert mode to surround next word or words (if they are already surrounded) in desired things
+`"|"{some text}` when in insert mode on position `|`, `<ctrl>e` will surround `{some text}` with quotes
+pressing `<ctrl>e` multiple times will include next word each time
 `<alt>b` when you FlyMode is enabled to insert a closed bracket where needed
 `<alt>n` finds next closing paranthasis

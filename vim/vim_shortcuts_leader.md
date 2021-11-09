@@ -2,8 +2,8 @@
 
 ### Normal mode
 
-`1` move tab one place left
-`2` move tab one place right
+`1` open first tab
+`2` open second tab
 `3`
 `4`
 `5`
@@ -12,40 +12,40 @@
 `8`
 `9`
 `0`
-`-` resize split down
-`=` resize split up
+`-` 
+`=`
 `q` quit
 `q!` quit without saving
 `w` save
 `e` FZF git modified files
 `r` reload vim configuration
-`t` FZF find tab
-`y`
+`t` new tab
+`y` FZF find tab
 `u` 
 `i`
 `o`
 `p`
-`[`
-`]`
+`[` move current line down
+`]` move current line up
 `a` NERDTree find
 `s` FZF ripgrep
 `d` FZF git files (shows all git files)
 `f` FZF 
 `g` git status
 `h` resize split left
-`j` move current line down
-`k` move current line up
+`j` resize split down
+`k` resize split up
 `l` resize split right
 `;`
 `'`
 `\` split vertical
 `z` EasyMotion plugin prefix
 `x` save and close
-`c`
+`c` clear search
 `v` toggle paste
 `b` FZF buffers
 `n` NERDTree open
-`m` new tab
-`,` save
+`m` 
+`,` clear whitespace at the end of the line
 `.` switch between current and last buffer
-`<space>` clear whitespace at the end of the line
+`<space>` save
