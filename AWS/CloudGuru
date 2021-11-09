@@ -189,6 +189,25 @@ Characteristics
 		user/group/role managed policies - max 10
 	Powerusers are allowed to access all services apart from management groups and users within IAM
 
+AWS Directory Service
+  AD on AWS
+  SSO for domain joined instances
+  DCs are note shared between AWS users
+  AD Connector 
+    used to connect to on-premise AD
+  SimpleAD 
+    more simplified option
+    can't be joined to on-premise AD
+  Non-AD-Compatible
+    CloudDirectory
+      Directory based store for developers
+      org charts, course catalogues, device registries
+    Cognito User Pools
+      Managed user directory for Software as a Service (SaaS) applications
+      sign-up/on for web and mobile
+
+
+
 ---------------------------------------------------------------------------------------------------------------------------
 
 	--- S3 ---
@@ -842,7 +861,25 @@ Elasticache
 		Redis
 			in-memory key-value store
 			Multi-AZ
+      backups and restore
 	Automated backups only on Redis Cache cluster
+  Other services which have caching capabilites:
+  - CloduFront
+  - API Gateway
+  - DynamoDB Accelerator (DAX)
+
+Database Migration Service (DMS)
+  in the background VM is started, pulls from source, pushes to destination
+  supports both homogenous and hetrogenous migrations (SQL --> SQL, or MySQL --> SQL)
+  for hetrogenous migrations Schema Conversion Tool (SCT) also runs on that instance
+  can also migrate data from S3 to DB
+
+Elastic Map Reduce (EMR)
+  big data processing
+  in the backgroud using Apacke Spark, Hive, HBase, Flink, Hudi
+  Logs are important, best practice is to sync logs to S3
+    this can only be set up during cluster setup
+  
 
 Aurora
 	Charecteristics
