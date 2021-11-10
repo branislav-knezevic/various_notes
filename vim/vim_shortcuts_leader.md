@@ -12,8 +12,8 @@
 `8`
 `9`
 `0`
-`-` 
-`=`
+`-` change theme to light
+`=` change theme to dark
 `q` quit
 `q!` quit without saving
 `w` save
@@ -38,14 +38,14 @@
 `l` resize split right
 `;`
 `'`
-`\` split vertical
-`z` EasyMotion plugin prefix
+`\` 
+`z` zoom buffer to tab
 `x` save and close
 `c` clear search
 `v` toggle paste
 `b` FZF buffers
 `n` NERDTree open
-`m` 
+`m` EasyMotion plugin prefix
 `,` clear whitespace at the end of the line
 `.` switch between current and last buffer
 `<space>` save
