@@ -2,6 +2,10 @@
 
 `terraform state list` shows all available terraform state files
 `terraform state show <state_file_name` opens specific terraform state file
+`terraform state mv <old_resource> <new_module>` can be used to refactor terrafrom code from resource to module or from one resource to another in a way it doesn't affect terrafrom state
+
+`terraform plan -target=<target>` any target can be selected from the `terraform state show` result e.g. `terrafrom plan -target=module.s3-endpoint`
+`terraform force-unlock <unlock_id` unlock terraform state. This may happen when plan or apply is interrupted
 
 
 

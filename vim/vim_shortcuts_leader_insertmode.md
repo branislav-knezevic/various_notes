@@ -38,4 +38,6 @@
 `m`
 `,`
 `.`
-`<space>` 
+`<space>w` save file
+`<space>q` exit file
+`<space>x` save and exit file

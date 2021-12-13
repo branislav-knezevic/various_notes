@@ -58,6 +58,8 @@ in insert mode:
 `<leader>gs` git status - same as `:G`
 `<leader>gp` git push
 `<leader>gl` git pull
+`<leader>gf` git fetch
+`<leader>gb` git blame
 `<leader>gh` take left side from merge
 `<leader>g;` take right side from merge
   `s` when on a file to set it to staging 

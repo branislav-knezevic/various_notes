@@ -6,7 +6,7 @@ When working with `--query adding []` at the end flatterns the output
 `--query 'Reservations[].Instances[].[Tags][][]`
 Filtering can be done within the `[]`
 `--query 'Reservations[].Instances[?VpcId = vpc-35c0275d][].[Tags]'` returns tags for all instaces with a specific VpcId
-Functions can be applied to queries, eg sum() sort() sort_by()
+Functions can be applied to queries, eg sum() sort() sort\_by()
 `sum(Reservations[]...)`
 `sort_by(Contents[?Size = 2000], &LastModified).[Key.Size.LastModified]`
 All queries can be set to have a result as key:value pairs
@@ -16,11 +16,14 @@ All queries can be set to have a result as key:value pairs
 ## Filtering
 
 when using `--filter` paramenter make sure to properly set the names (words devided by dashes `group-name` instad of CamelCase `GroupName`), syntax is as follows:
-```
+
+```bash
 aws ec2 describe-security-groups --filters "Name=group-name,Values=default"
 ```
+
 although in the `describe-security-groups` CamelCase is used for name `GroupName`
-```
+
+```JSON
 {
     "SecurityGroups": [
         {

@@ -205,6 +205,14 @@ AWS Directory Service
     Cognito User Pools
       Managed user directory for Software as a Service (SaaS) applications
       sign-up/on for web and mobile
+      works with social media identities
+
+Resource Access Management 
+  sharing resources between AWS accounts
+
+AWS Single-sign-on (SSO)
+  Ability to access third party accounts with AWS oganizations
+  Integrates with AD
 
 
 
@@ -718,6 +726,12 @@ Routing Policies
 	Geolocation
 		resolves to geographically configured records
 		creating a Global record is recommended by AWS
+  Geoproximity routing
+    takes consideration of both user and record location
+    traffic flow only
+  Multivalue Answer routing
+    like simple with health checks
+
 FAQ
 	Anycast is a networking and routing technology that helps your end users’ DNS queries get answered from the optimal Route 53 location given network conditions.
 	No default TTL
@@ -911,6 +925,7 @@ Default VPC characteristic
 	has IGW immediatly
 	all Subnets have a route to the intenret
 	Each EC2 instance has both public and private IP
+
 VPC Peering
 	Connecting two VPCs together via a direct network route using private IP addresses
 	This can be done between multiple AWS accounts
@@ -945,7 +960,6 @@ Network Access Control Lists - 'stateless'
 FlowLogs
 	Used to monitor IP traffic to a VPC # allow, deny or all traffic can be monitored
 	You can not enable them for peered VPCs unless both VPCs are in your account
-	Can''t be tagged
 	Configuration of flow log can''t be change after creation 'this may have changed'
 	Not monitored
 		Traffic from intances to Route53
@@ -962,6 +976,19 @@ Endpoints
 		Gateway Endpoints
 			Like a NAT gateway, not tighed to an interface, it is highly available
 			S3, DynamoDB
+Direct Connect
+  having direct connectivity to AWS via direct connect locations
+  steps to set up:
+    DirectConnect console create Public virtual Interface
+    VPN, new customer Gateway
+    create Virtual Private Gateway
+    Atach VPG to VPC
+    Create new VPN conection
+    Select VPG and Customer Gateway
+    Once working set up VPN on customer side
+Global Accelerator
+  It directs traffic to optimal endpoints via AWS backbone network
+  AWS gives 2 static IP addresses
 VPC CleanUp
 	Delete EC2 Instances
 	Detach IGW and delete

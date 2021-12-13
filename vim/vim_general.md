@@ -23,16 +23,22 @@ All nesto work as a word + noun (dw = delete word)
 `w` word forward
 `b` word backward
 `e` end of the word
+`ge` end of previous word
 `i` inner (selects just the word)
 `a` all (selects word but also spaces/brackets if they exist)
 `f_` find - go to first appearance of character _ in that line
 `F_` same thing but backwards
 `t_` till - go to a character before the first appearance of character _ in that line
 `T_` same thing but backwards
+`0` beginning of a line
+`^` beginning of the text in the current line
+`$` end of a line
 `;` to jump to the next occurance, works with both `f` and `t`
 `,` to jump to the previous occurance works with both `F` and `T`
 `{` beginning of a paragraph
 `}` end of a paragraph
+`(` previous sentance
+`)` next sentance
 `%` go to other (opening or closing) brackets
 `''` go to previous location
 `:<line_number` go to specific line number or `<line_number>g`
@@ -120,15 +126,18 @@ Different way to apply to multiple lines
 `mA` sets mark "a" to the coursor position but it is valid for the whole buffer
 `'A` jumps to position of mark "A"
 
-## Commands:
-`:find <file_name>` finds a file name in the current directory
-`:read <file_name>` adds the content of the file to this document
-`:ls` lists all files which are currently opened in vim
-`:b <part_of_the_filename>` opens that file if it is already opened in vim
-`:echo expand(%)` get the name of the currently opened file
-`:reg` shows all registers, good place to paste stuff from
-`g` at the end of the command means it applies to the whole document
-`v` means an NOT to match the given pattern
+## Visual Block mode
+
+`ctrl + v` enter visual block mode from normal mode
+Like in visual mode, text can be selected with any key movement
+When doing changes, they will appear to be done on a first line and only once going back to normal mode they will appear on all lines
+`c` change selectio (delete and go to insert mode)
+`I` insert before coursor
+`A` insert after coursor
+`r` replace every character in selection
+`d` delete selection
+`o` toggle coursor to opposite corner
+`$` will select till the end of every line (even if the length is different)
 
 ## Control commands
 
@@ -144,12 +153,15 @@ Different way to apply to multiple lines
 `ctrl + o` got to previous jump (list jumps with `:jumps` )
 `ctrl + i` got to next jump
 `ctrl + a` when on integer, it will increment it
+  when highlighted, it will only increment that number
+ `g ctrl+a`  when numbered ordered list is required, 
 `ctrl + x` when on integer, it will decrement it
 `ctrl + ]` jump to a definition of a tag
 `ctrl + g]` will show all the occurencies of this defined tag 
 `ctrl + t` jump back up the tag stack
 `ctrl + n` autocompletes a word, n is for next
 `ctrl + p` autocompletes a word, p is for previous
+`ctrl + v` enter visual block mode
 
 #### Window operations
 
@@ -197,3 +209,12 @@ Buffers are used when more that one files are open within the same Vim
 ## :Commands
 
 `:!<command>` any shell command can be executed like this
+`:find <file_name>` finds a file name in the current directory
+`:read <file_name>` adds the content of the file to this document
+`:ls` lists all files which are currently opened in vim
+`:b <part_of_the_filename>` opens that file if it is already opened in vim
+`:echo expand(%)` get the name of the currently opened file
+`:reg` shows all registers, good place to paste stuff from
+`g` at the end of the command means it applies to the whole document
+`v` means an NOT to match the given pattern
+

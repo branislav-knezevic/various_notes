@@ -29,6 +29,10 @@ eg:
 `![command]` runs the last command assigned, !gre will run last grep command (if it was ran previously)
 `!?[key word]` runs last command which contains this keyword (command, part of the path...)
 `!$` represents the last argument, ll /etc/www will list files and cd!$ will enter the same folder
+`!^` represents the first argument
+`!*` represents all arguments from the previous commands
+`!! :<number>` will return the `<number>` argument from the list of arguments
+`^<old>^<new>` replaces <old> with <new> text in last command
 `history` shows all commands which have been ran
 `ctrl+r` searches the command history, esc to edit, enter to run
 

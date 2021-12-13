@@ -1,6 +1,6 @@
-## Leader shortcuts
+# Leader shortcuts
 
-### Normal mode
+## Normal mode
 
 `1` open first tab
 `2` open second tab
@@ -21,8 +21,8 @@
 `r` reload vim configuration
 `t` new tab
 `y` FZF find tab
-`u` 
-`i`
+`u` change current word to UPPERCASE
+`i` change current word to lowercase
 `o`
 `p`
 `[` move current line down
@@ -30,7 +30,7 @@
 `a` NERDTree find
 `s` FZF ripgrep
 `d` FZF git files (shows all git files)
-`f` FZF 
+`f` FZF
 `g` git status
 `h` resize split left
 `j` resize split down
@@ -38,7 +38,7 @@
 `l` resize split right
 `;`
 `'`
-`\` 
+`\`
 `z` zoom buffer to tab
 `x` save and close
 `c` clear search

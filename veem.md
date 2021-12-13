@@ -8,4 +8,3 @@ restore
 option: entire VM
 restore to new location with different settings
 select proper host with sufficient resources
-
