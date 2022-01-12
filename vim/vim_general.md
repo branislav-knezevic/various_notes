@@ -1,4 +1,5 @@
 # Source
+
 YouTube:
     Matering the Vim Language
     How to do 90% of What Plugins do (with just vim)
@@ -10,7 +11,7 @@ All nesto work as a word + noun (dw = delete word)
 
 ### Text objects
 
-`w` words    
+`w` words
 `s` sentances
 `p` paragraphs  
 `t` tags (available in XML/HTML files)
@@ -26,9 +27,9 @@ All nesto work as a word + noun (dw = delete word)
 `ge` end of previous word
 `i` inner (selects just the word)
 `a` all (selects word but also spaces/brackets if they exist)
-`f_` find - go to first appearance of character _ in that line
+`f_` find - go to first appearance of character in that line
 `F_` same thing but backwards
-`t_` till - go to a character before the first appearance of character _ in that line
+`t_` till - go to a character before the first appearance of character in that line
 `T_` same thing but backwards
 `0` beginning of a line
 `^` beginning of the text in the current line
@@ -43,13 +44,14 @@ All nesto work as a word + noun (dw = delete word)
 `''` go to previous location
 `:<line_number` go to specific line number or `<line_number>g`
 
-### Commands:
+### Commands
+
 `d` delete
 `dd` delete whole line
 `D` delete till the end of a line
 `S` delete entire line and go to insert mode, `cc` would do the same
 `c` change (delete + insert)
-`cc` change whole line and go to insert mode 
+`cc` change whole line and go to insert mode
 `C` change till the end of a line
 `i` go to insert mode
 `I` move to beggining of the line and insert
@@ -60,7 +62,7 @@ All nesto work as a word + noun (dw = delete word)
 `p` paste below current line
 `P` paste above current line
 `>` indenti (works with hjkl operators)
-`<` outdent 
+`<` outdent
 `v` visually select
 `V` visuall select lines
 `y` yank/copy
@@ -74,6 +76,21 @@ All nesto work as a word + noun (dw = delete word)
 `#` search for word under the coursor backwards
   for previous occurance use `#` again or `N`
 
+### Count
+
+Each command can be multiplied with any number
+`5p` paste 5 times
+`5i<word><esc>` insert `<word>` 5 times
+`5@<macro>` repeat `<macro>` 5 times
+
+### g commands
+
+`g'` go to next edited part
+`g;` go to next edited part
+`gd` go to definitin of a function
+`gUw` change whole word to uppecrase
+`guw` change whole word to lowercase
+`gUU` whole line uppercase
 
 ### Macros
 
@@ -86,7 +103,8 @@ Different way to apply to multiple lines
 `V+j/k` to select desired lines
 `:normal @<register` applies that macro to those lines
 
-### Nouns:
+### Nouns
+
 `/` search for any character, word
 `?` same thing but backwards
 `m` set mark, eg. mq sets q mark on place where the cursor is
@@ -101,16 +119,13 @@ Different way to apply to multiple lines
 `d'q` delete everyting until the marker q
  same operations work with c, v, y
 `daw|"|]` same as diw but with a it captures also the space that follows i
-`gUw` change whole word to uppecrase
-`guw` change whole word to lowercase
-`gUU` whole line uppercase
 
 ### Registers
 
 `:registers` or `:reg`shows the list of things in registry - basically clipboard
-- `c` character text
-- `l` line text
-- `b` block text
+ `c` character text
+ `l` line text
+ `b` block text
 `""` the unnamed register - everything that goes to clipboard ends here
 
 #### Named Registers
@@ -122,9 +137,12 @@ Different way to apply to multiple lines
 ### Marks
 
 `ma` sets mark "a" to the coursor position
-`'a` jumps to position of mark "a"
+`` `a `` jumps to position of mark "a"
+`'a` jumps to line of mark "a"
 `mA` sets mark "a" to the coursor position but it is valid for the whole buffer
 `'A` jumps to position of mark "A"
+`:marks` show a list of available marks
+`:delm<mark>` deletes desired `<mark>`
 
 ## Visual Block mode
 
@@ -141,7 +159,7 @@ When doing changes, they will appear to be done on a first line and only once go
 
 ## Control commands
 
-### Normal Mode 
+### Normal Mode
 
 `ctrl + c` similar like in the shell, breaks the current workflow
 `ctrl + y` few lines up
@@ -154,10 +172,10 @@ When doing changes, they will appear to be done on a first line and only once go
 `ctrl + i` got to next jump
 `ctrl + a` when on integer, it will increment it
   when highlighted, it will only increment that number
- `g ctrl+a`  when numbered ordered list is required, 
+ `g ctrl+a`  when numbered ordered list is required,
 `ctrl + x` when on integer, it will decrement it
 `ctrl + ]` jump to a definition of a tag
-`ctrl + g]` will show all the occurencies of this defined tag 
+`ctrl + g]` will show all the occurencies of this defined tag
 `ctrl + t` jump back up the tag stack
 `ctrl + n` autocompletes a word, n is for next
 `ctrl + p` autocompletes a word, p is for previous
@@ -184,7 +202,7 @@ When doing changes, they will appear to be done on a first line and only once go
 `ctrl + x ctrl + k` fzf complete word (from whole dictionary)
 `ctrl + x ctrl + j` fzf complete file with Ag (silver-searcher)
 `ctrl + x ctrl + l` fzf complete line
-`ctrl + x ctrl + ]` autocompletes a tag 
+`ctrl + x ctrl + ]` autocompletes a tag
 
 ### Buffers
 
@@ -208,6 +226,9 @@ Buffers are used when more that one files are open within the same Vim
 
 ## :Commands
 
+`:h <anything>` search in help for anything
+`:helpgrep <anything>` search for occurance of desired word
+`:map` shows a list of mapped keys
 `:!<command>` any shell command can be executed like this
 `:find <file_name>` finds a file name in the current directory
 `:read <file_name>` adds the content of the file to this document
@@ -215,6 +236,8 @@ Buffers are used when more that one files are open within the same Vim
 `:b <part_of_the_filename>` opens that file if it is already opened in vim
 `:echo expand(%)` get the name of the currently opened file
 `:reg` shows all registers, good place to paste stuff from
+`:buffers` list of all open buffers
+`:e <file_name>` open desired file for editing
 `g` at the end of the command means it applies to the whole document
 `v` means an NOT to match the given pattern
 

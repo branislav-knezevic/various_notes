@@ -25,6 +25,11 @@ Next merge this branch where ever needed.
 Other option:
 `git revert <some_old_commit>` adds new commit on top of existing ones but revert
 
+### Revert whole repo to a point in time
+
+`git switch -c <new_branch_name> <desired_branch>@{"<year-month-day>"}` checkout repo from certain point in time on a dedicated branch
+`git switch -c may-fourth master@{"2020-05-04"}`
+
 ## Committing
 
 `git commit --amend -m "<new_message>"` updating last commit message
