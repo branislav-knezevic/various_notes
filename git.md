@@ -8,6 +8,7 @@ https://www.youtube.com/watch?v=FdZecVxzJbk
 
 `git log <path_to_file>` shows the history of commits on the specific file
 `git log Dockerfile`
+`git show branch:file` shows file from desired branch, can be exported with `> new_file`
 `git show <git_hash>:<path_to_file>` shows how files looked like in a specific commit
 `git show jfi22i9sdjf9sdf9j29jfd9fj:Dockerfile`
 `git show HEAD@{year-month-day}:<path_to_file>` shows how file looked like on specific date

@@ -31,7 +31,7 @@ depending on how you setup the role. A role that has login right is called user.
 roles, which are known as groups.
 `\du` list users
 `CREATE ROLE <role_name>` create role
-`CREATE ROLE <username> NOINHERIT LOGIN PASSWORD '<password>';` create role with credentials. Password must be in single
+`CREATE ROLE "<username>" NOINHERIT LOGIN PASSWORD '<password>';` create role with credentials. Password must be in single
 quotes
 `SET ROLE <role_name>` change role for the current session. User will then have privilages only set for that role
 `RESET ROLE` restores the original role

@@ -1,17 +1,20 @@
 ## Plugin commands
 
 ### surround plugin
+
 `ysiwX` surround word with X (.,[]{} whatever)
 `cs"'` replace surrunding " with ' if text is already surrounded
 `dsX` delete exisitng X surrundings
 `ysiwt` will bring up tag at the bottom of the screen to enter a desired tag
 
 ### comment plugin
+
 `gcc` comment out a line
 `gc2j` comment N number of lines below
 `gcgc` uncomment adjacent commented lines
 
 ### vim-system-copy
+
 `cpiw` copy word to system plugin
 `cpi'` copy content inside of '' to system plugin
 `cvi'` paste content of system clipboard inside of ''
@@ -26,6 +29,7 @@
 `zv` expand folds to reveal coursor
 
 ### FZF
+
 `:FZF` starts a regular fuzzyfinder  
 `:Files` searches for files in current git dir and shows preview
 `:Rg` initiates ripgrep search, searches also for phrases within files
@@ -45,12 +49,18 @@
   `<ctrl>t` open selected file in new tab
 `<leader>s` ripgrep in files (searches for phrases withing files)
 
-
 in insert mode:  
 `<ctrl>x<ctrl>k` find words (from dictionary)
 `<ctrl>x<ctrl>f` fzf complete path
 `<ctrl>x<ctrl>j` fzf complete path with silverearcher
 `<ctrl>x<ctrl>l` fzf complete line
+
+### fzf-checkout
+
+`<ctrl>b` create a branch or tag with the current query as name
+`<ctrl>d` delete a branch or tag
+`<ctrl>e` merge a branch
+`<ctrl>r` rebase a branch
 
 ### Fugitive
 
@@ -62,18 +72,17 @@ in insert mode:
 `<leader>gb` git blame
 `<leader>gh` take left side from merge
 `<leader>g;` take right side from merge
-  `s` when on a file to set it to staging 
-  `u` when on a file to set it to unstage 
+  `dv` go to resolve conflict mode
+  `s` when on a file to set it to staging
+  `u` when on a file to set it to unstage
   `-` toggle these two above
   `-` once commit has been completed, can be used to push changes
   `=` show changes
   `X` discards selected changes on files or in conflict mode (unstaged are local changes)
-  `dv` go to resolve conflict mode
   `<any_number>gI` adds selected file to .gitgnore
 `:Gblame` shows who made changes on that file
   `o` once in `Gblame` will show which changes were made with specific commit
 `:Glog` git log history
-
 
 ### Easymotion
 
@@ -103,3 +112,10 @@ in insert mode:
 pressing `<ctrl>e` multiple times will include next word each time
 `<alt>b` when you FlyMode is enabled to insert a closed bracket where needed
 `<alt>n` finds next closing paranthasis
+
+### vim-markdown-toc
+
+`:GenTocGFM` GFM style table of contents
+`:GenTocRedcarpet` Redcarpet style table of contents
+`:GenTocGitLab` GitLab style table of contents
+`:GenTocMarked` Marked style table of contents

@@ -152,7 +152,7 @@ When doing changes, they will appear to be done on a first line and only once go
 `c` change selectio (delete and go to insert mode)
 `I` insert before coursor
 `A` insert after coursor
-`r` replace every character in selection
+`c` replace every character in selection
 `d` delete selection
 `o` toggle coursor to opposite corner
 `$` will select till the end of every line (even if the length is different)
@@ -180,6 +180,11 @@ When doing changes, they will appear to be done on a first line and only once go
 `ctrl + n` autocompletes a word, n is for next
 `ctrl + p` autocompletes a word, p is for previous
 `ctrl + v` enter visual block mode
+`ctrl + w` used for other commands
+`ctrl + w + o` closes all windows in a tab apart from the current one
+`ctrl + w + r` swap bottom/top if split horizontally or vertically
+`ctrl + w + R` swap bottom/top if split horizontally or vertically
+`ctrl + w + H` Move current window the far left and use the full height of the screen
 
 #### Window operations
 
