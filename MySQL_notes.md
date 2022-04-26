@@ -27,7 +27,8 @@ select concat('CALL mysql.rds_kill( ',id,');') from information_schema.processli
 `SELECT User FROM mysql.user;` shows DB users
 `SHOW GRANTS FOR <username>;`  shows permissions
 `GRANT ALL PRIVILEGES ON <db_name>.<table_name> TO '<user>'@'%';` grant permissions on a user to a database or table
-`CREATE USER '<username>'@'localhost' IDENTIFIED BY '<PASSWORD>';` create user with privileges
+`CREATE USER '<username>'@'%' IDENTIFIED BY '<PASSWORD>';` create user with privileges
+`ALTER USER '<username>'@'%' IDENTIFIED BY '<PASSWORD>';` change password for user
 
 
 select status from journey_activations where journey_id like "3c68524c%" -- example for milenko
