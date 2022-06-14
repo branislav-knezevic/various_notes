@@ -104,6 +104,7 @@ drwxr-xr-x. 4 root root 44 May 13 05:25 folder1.1
 `find /usr/share -maxdepth 3 -size +138K` return all files three levels down from /usr/share which are bigger than 138K
 `find . -name "<file_name>" -type f -delete` locate all files with specific name recursively from current dir and delete them
 `find . -name "<dir_name>" -type d -exec rm -rf {} +` locate all directories with specific name recursively from current dir and delete them 
+`find . -mtime +15 -name '*' -type d -exec -rf {} \;` locate any directory which is modified more than 15 days ago and delete it
 
 `ls [folder path] 1> [file path/file name]` ls is just a example command, this will store the output of this command in specified file. Number 1 is optional in this case
 `ls [folder path] 1>> [file path/file name]` same as above, just appends to the file, doesn't create a new one
@@ -221,7 +222,24 @@ set ai ts=4 expandtab
 abbr _sh #!/bin/bash
 nmap <C-N> :set invnumber<CR>
 
+### Networking
 
+#### Netcat
+
+Port scan for ports 1-00 on specific host
+```
+netcat -z -n -v <host> 1-100
+```
+
+Make computer listen on specific port and redirect all incoming data to a file 
+```
+netcat -l <port_number> > <file_name>
+```
+
+Send a file to a host with specific port
+```
+netcat <host> <port> < <file_name>
+```
 
 
 
